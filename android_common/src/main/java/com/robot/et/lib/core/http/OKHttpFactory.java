@@ -3,6 +3,7 @@ package com.robot.et.lib.core.http;
 import com.robot.et.lib.MyApplication;
 import com.robot.et.lib.core.http.cookie.CookieManger;
 import com.robot.et.lib.core.http.interceptor.GzipRequestInterceptor;
+import com.robot.et.lib.core.http.interceptor.ModifyResponseInterceptor;
 
 import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
@@ -40,15 +41,16 @@ enum OKHttpFactory {
         okHttpClient = new OkHttpClient.Builder()
                 //打印请求log
                 .addInterceptor(httpLoggingInterceptor)
-                //压缩请求头信息
+                //修改Request请求信息
                 .addInterceptor(new GzipRequestInterceptor())
+                //修改Response请求头Cache-Control
+                .addInterceptor(new ModifyResponseInterceptor())
                 //cookie
                 .cookieJar(cookie)
                 //cache
                 .cache(cache)
                 //失败重连
                 .retryOnConnectionFailure(true)
-
                 //time out
                 .readTimeout(TIMEOUT_READ, TimeUnit.SECONDS)
                 .connectTimeout(TIMEOUT_CONNECTION, TimeUnit.SECONDS)

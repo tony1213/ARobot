@@ -10,7 +10,7 @@ public final class ModifyResponseInterceptor implements Interceptor {
     @Override public Response intercept(Interceptor.Chain chain) throws IOException {
         Response originalResponse = chain.proceed(chain.request());
         return originalResponse.newBuilder()
-                .header("Cache-Control", "max-age=60")
+                .addHeader("Cache-Control", "max-age=600")
                 .build();
     }
 }

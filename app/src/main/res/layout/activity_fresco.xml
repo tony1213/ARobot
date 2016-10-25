@@ -9,13 +9,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.robot.et.fresco.FrescoActivity">
+    tools:context=".test.fresco.FrescoActivity">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_view"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         fresco:placeholderImage="@mipmap/ic_launcher"
-        />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

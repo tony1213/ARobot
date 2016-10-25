@@ -13,17 +13,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".test.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".jni.JNIActivity" />
-        <activity android:name=".fresco.FrescoActivity" />
-        <activity android:name=".picasso.PicassoActivity" />
-        <activity android:name=".base.BaseActivity"></activity>
+        <activity android:name=".test.jni.JNIActivity" />
+        <activity android:name=".test.fresco.FrescoActivity" />
+        <activity android:name=".test.picasso.PicassoActivity" />
+        <activity android:name=".base.BaseActivity" />
+        <activity android:name=".business.MainActivity"></activity>
     </application>
 
 </manifest>

@@ -1,15 +1,18 @@
 package com.robot.et.test;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.robot.et.R;
-import com.robot.et.test.fresco.FrescoActivity;
-import com.robot.et.test.jni.JNIActivity;
+import com.robot.et.business.common.VoiceResultHandler;
+import com.robot.et.business.voice.ListenCallBack;
+import com.robot.et.business.voice.SpeechImpl;
+import com.robot.et.business.voice.VoiceService;
 import com.robot.et.lib.business.entity.User;
 import com.robot.et.lib.core.http.HttpTaskHelper;
+import com.robot.et.test.fresco.FrescoActivity;
 import com.robot.et.test.picasso.PicassoActivity;
 
 import butterknife.ButterKnife;
@@ -30,19 +33,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        startService(new Intent(this, VoiceService.class));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, VoiceService.class));
     }
 
     @OnClick(R.id.button)
     public void goJNIMethod(){
         Log.i(TAG,"exec goJNIMethod");
-        Intent intent = new Intent();
-        intent.setClass(this, JNIActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent();
+//        intent.setClass(this, JNIActivity.class);
+//        startActivity(intent);
+        SpeechImpl.getInstance().startListen(new ListenCallBack() {
+            @Override
+            public void onListenResult(String result) {
+                VoiceResultHandler.handVoiceResult(MainActivity.this, result);
+            }
+        });
     }
     @OnClick(R.id.button2)
     public void goRetrofitMethod(){
         Log.i(TAG,"exec goRetrofitMethod");
-        HttpTaskHelper.gitHubAPI()
+        HttpTaskHelper.gitHubAPI(this)
                 .userInfoString("tony1213")
                 .enqueue(new Callback<String>() {
                     @Override
@@ -59,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.button3)
     public void goNormalGet(){
-        Call<User> userCall = HttpTaskHelper.gitHubAPI()
+        Call<User> userCall = HttpTaskHelper.gitHubAPI(this)
                 .userInfo("tony1213");
         userCall.enqueue(new Callback<User>() {
             @Override
@@ -80,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @OnClick(R.id.button4)
     public void rxGet() {
-        HttpTaskHelper.gitHubAPI()
+        HttpTaskHelper.gitHubAPI(this)
                 .userInfoRx("tony1213")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

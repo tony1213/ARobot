@@ -1,11 +1,11 @@
 package com.robot.et.lib.core.http;
 
-import com.robot.et.lib.MyApplication;
 import com.robot.et.lib.core.http.cookie.CookieManger;
 import com.robot.et.lib.core.http.interceptor.GzipRequestInterceptor;
 import com.robot.et.lib.core.http.interceptor.ModifyResponseInterceptor;
 
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.CookieJar;
 import okhttp3.OkHttpClient;
@@ -33,9 +33,9 @@ enum OKHttpFactory {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        Cache cache = new Cache(MyApplication.mContext.getCacheDir(),CACHE_MAX_SIZE);
+        Cache cache = new Cache(HttpTaskHelper.getContext().getCacheDir(),CACHE_MAX_SIZE);
 
-        CookieJar cookie = new CookieManger(MyApplication.mContext);
+        CookieJar cookie = new CookieManger(HttpTaskHelper.getContext());
 
 
         okHttpClient = new OkHttpClient.Builder()

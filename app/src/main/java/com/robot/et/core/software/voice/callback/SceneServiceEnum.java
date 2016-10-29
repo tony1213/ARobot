@@ -1,4 +1,4 @@
-package com.robot.et.business.voice;
+package com.robot.et.core.software.voice.callback;
 
 // 科大讯飞文本理解场景
 public enum SceneServiceEnum {

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        startService(new Intent(this, VoiceService.class));
+
     }
 
     @Override
@@ -46,15 +46,8 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent();
 //        intent.setClass(this, JNIActivity.class);
 //        startActivity(intent);
-//        SpeechImpl.getInstance().startListen(new ListenCallBack() {
-//            @Override
-//            public void onListenResult(String result) {
-//                VoiceResultHandler.handVoiceResult(MainActivity.this, result);
-//            }
-//        });
 
-
-//        VideoPhone.callPhone(this, CallType.CALL_TYPE_LOOK, "123", true);
+        startService(new Intent(this, VoiceService.class));
     }
     @OnClick(R.id.button2)
     public void goRetrofitMethod(){

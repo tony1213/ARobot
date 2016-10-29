@@ -1,4 +1,5 @@
-package com.robot.et.business.voice;
+package com.robot.et.core.software.voice.callback;
+
 
 /**
  * Created by houdeming on 2016/10/28.
@@ -10,5 +11,5 @@ public interface UnderstandCallBack {
      * @param serviceEnum      所在的场景
      * @param understandResult 理解的结果内容
      */
-    void onResult(SceneServiceEnum serviceEnum, String understandResult);
+    void onUnderstandResult(SceneServiceEnum serviceEnum, String understandResult);
 }

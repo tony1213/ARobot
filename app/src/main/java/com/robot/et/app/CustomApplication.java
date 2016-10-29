@@ -5,12 +5,18 @@ import android.app.Application;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.robot.et.config.DataConfig;
+import com.robot.et.core.software.video.agora.BaseEngineEventHandlerActivity;
+import com.robot.et.core.software.video.agora.MessageHandler;
+
+import io.agora.rtc.RtcEngine;
 
 /**
  * Created by houdeming on 2016/10/26.
  */
 public class CustomApplication extends Application {
     private static CustomApplication instance;
+    private RtcEngine rtcEngine;
+    private MessageHandler messageHandler;
 
     public static CustomApplication getInstance() {
         return instance;
@@ -22,6 +28,8 @@ public class CustomApplication extends Application {
         instance = this;
         // 初始化科大讯飞
         initVoice();
+        // 初始化agora视频
+        initAgora();
     }
 
     // 初始化科大讯飞
@@ -38,5 +46,19 @@ public class CustomApplication extends Application {
         // 设置使用v5+
         param.append(SpeechConstant.ENGINE_MODE + "=" + SpeechConstant.MODE_MSC);
         SpeechUtility.createUtility(this, param.toString());
+    }
+
+    // 初始化视频（注释：agora视频一定要在这里初始化，否则多次打开视频的时候不能保证拿到对方视频流）
+    private void initAgora() {
+        messageHandler = new MessageHandler();
+        rtcEngine = RtcEngine.create(getApplicationContext(), DataConfig.AGORA_KEY, messageHandler);
+    }
+
+    public RtcEngine getRtcEngine(){
+        return rtcEngine;
+    }
+
+    public void setEngineEventHandlerActivity(BaseEngineEventHandlerActivity engineEventHandlerActivity){
+        messageHandler.setActivity(engineEventHandlerActivity);
     }
 }

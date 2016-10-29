@@ -15,6 +15,9 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
 
     <application
         android:name=".app.CustomApplication"
@@ -35,6 +38,12 @@
         <activity android:name=".test.picasso.PicassoActivity" />
         <activity android:name=".base.BaseActivity" />
         <activity android:name=".business.MainActivity"></activity>
+
+        <activity
+            android:name=".business.video.AgoraActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
 
         <service android:name=".business.voice.VoiceService" />
     </application>

@@ -11,6 +11,7 @@ public class FrescoActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fresco);
         Uri uri = Uri.parse("http://i.imgur.com/DvpvklR.png");

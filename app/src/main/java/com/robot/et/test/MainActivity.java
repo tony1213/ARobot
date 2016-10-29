@@ -6,9 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.robot.et.R;
-import com.robot.et.business.common.VoiceResultHandler;
-import com.robot.et.business.voice.ListenCallBack;
-import com.robot.et.business.voice.SpeechImpl;
 import com.robot.et.business.voice.VoiceService;
 import com.robot.et.lib.business.entity.User;
 import com.robot.et.lib.core.http.HttpTaskHelper;
@@ -49,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent();
 //        intent.setClass(this, JNIActivity.class);
 //        startActivity(intent);
-        SpeechImpl.getInstance().startListen(new ListenCallBack() {
-            @Override
-            public void onListenResult(String result) {
-                VoiceResultHandler.handVoiceResult(MainActivity.this, result);
-            }
-        });
+//        SpeechImpl.getInstance().startListen(new ListenCallBack() {
+//            @Override
+//            public void onListenResult(String result) {
+//                VoiceResultHandler.handVoiceResult(MainActivity.this, result);
+//            }
+//        });
+
+
+//        VideoPhone.callPhone(this, CallType.CALL_TYPE_LOOK, "123", true);
     }
     @OnClick(R.id.button2)
     public void goRetrofitMethod(){

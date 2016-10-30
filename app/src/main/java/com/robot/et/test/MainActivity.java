@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.robot.et.R;
 import com.robot.et.business.voice.VoiceService;
+import com.robot.et.core.software.video.common.VideoConfig;
+import com.robot.et.core.software.video.impl.agora.AgoraVideo;
 import com.robot.et.lib.business.entity.User;
 import com.robot.et.lib.core.http.HttpTaskHelper;
 import com.robot.et.test.fresco.FrescoActivity;
@@ -52,19 +54,20 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.button2)
     public void goRetrofitMethod(){
         Log.i(TAG,"exec goRetrofitMethod");
-        HttpTaskHelper.gitHubAPI(this)
-                .userInfoString("tony1213")
-                .enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        Log.e(TAG,"onResponse:"+response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.e(TAG,"onFailure:"+t.toString());
-                    }
-                });
+//        HttpTaskHelper.gitHubAPI(this)
+//                .userInfoString("tony1213")
+//                .enqueue(new Callback<String>() {
+//                    @Override
+//                    public void onResponse(Call<String> call, Response<String> response) {
+//                        Log.e(TAG,"onResponse:"+response.body());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<String> call, Throwable t) {
+//                        Log.e(TAG,"onFailure:"+t.toString());
+//                    }
+//                });
+        new AgoraVideo(this).callPhone(VideoConfig.CALL_TYPE_VIDEO, "123", true);
     }
 
     @OnClick(R.id.button3)

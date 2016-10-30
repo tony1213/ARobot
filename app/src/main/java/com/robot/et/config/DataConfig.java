@@ -5,6 +5,5 @@ package com.robot.et.config;
  */
 
 public class DataConfig {
-    //声网arora key值
-    public static final String AGORA_KEY = "67ddec80abde4933b1672a186c9bdb3e";
+
 }

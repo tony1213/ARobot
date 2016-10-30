@@ -1,21 +1,23 @@
-package com.robot.et.business.video;
+package com.robot.et.core.software.video.impl.agora;
 
 import android.content.Context;
 import android.content.Intent;
 
+import com.robot.et.core.software.video.IVideo;
+
 /**
  * Created by houdeming on 2016/10/29.
- * 视频电话
+ * agora视频电话
  */
-public class VideoPhone {
-    /**呼叫电话
-     *
-     * @param context 上下文
-     * @param callType 呼叫类型
-     * @param roomNum 房间号
-     * @param isCallByVoice 是否是语音呼叫
-     */
-    public static void callPhone(Context context, int callType, String roomNum, boolean isCallByVoice) {
+public class AgoraVideo implements IVideo {
+    private Context context;
+
+    public AgoraVideo(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public void callPhone(int callType, String roomNum, boolean isCallByVoice) {
         Intent intent = new Intent(context, AgoraActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(AgoraActivity.CALL_TYPE, callType);
@@ -24,16 +26,16 @@ public class VideoPhone {
         context.startActivity(intent);
     }
 
-    // 电话是否正在进行
-    public static boolean isPhoneCallIng() {
+    @Override
+    public boolean isPhoneCallIng() {
         if (AgoraActivity.instance != null) {
             return true;
         }
         return false;
     }
 
-    // 关闭电话
-    public static void closePhone() {
+    @Override
+    public void closePhone() {
         if (AgoraActivity.instance != null) {
             AgoraActivity.instance.closeChannel();
             AgoraActivity.instance = null;

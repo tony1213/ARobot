@@ -40,7 +40,7 @@
         <activity android:name=".business.MainActivity"></activity>
 
         <activity
-            android:name=".business.video.AgoraActivity"
+            android:name=".core.software.video.impl.agora.AgoraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>

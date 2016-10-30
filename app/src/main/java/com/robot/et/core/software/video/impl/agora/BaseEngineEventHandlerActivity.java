@@ -1,4 +1,4 @@
-package com.robot.et.core.software.video.agora;
+package com.robot.et.core.software.video.impl.agora;
 
 import android.app.Activity;
 

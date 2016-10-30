@@ -7,6 +7,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.robot.et.config.DataConfig;
 import com.robot.et.core.software.video.agora.BaseEngineEventHandlerActivity;
 import com.robot.et.core.software.video.agora.MessageHandler;
+import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
 
 import io.agora.rtc.RtcEngine;
 
@@ -41,7 +42,7 @@ public class CustomApplication extends Application {
         // 设置你申请的应用appid,请勿在'='与appid之间添加空格及空转义符
         // 注意： appid 必须和下载的SDK保持一致，否则会出现10407错误
         StringBuffer param = new StringBuffer();
-        param.append("appid=" + DataConfig.SPEECH_APPID);
+        param.append("appid=" + SpeakConfig.SPEECH_APPID);
         param.append(",");
         // 设置使用v5+
         param.append(SpeechConstant.ENGINE_MODE + "=" + SpeechConstant.MODE_MSC);

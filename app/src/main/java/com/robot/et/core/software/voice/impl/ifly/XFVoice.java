@@ -41,7 +41,7 @@ import java.util.LinkedHashMap;
  * 讯飞语音
  */
 public class XFVoice implements IVoice {
-    private final String TAG = "voice";
+    private static final String TAG = "voice";
     private Context context;
     private SpeechSynthesizer mTts;
     private SpeakCallBack speakCallBack;
@@ -171,7 +171,7 @@ public class XFVoice implements IVoice {
 
         @Override
         public void onError(SpeechError error) {
-            Log.i(TAG, "onError");
+            Log.i(TAG, "Speech onError");
             // 错误码：10118(您没有说话)，可能是录音机权限被禁，需要提示用户打开应用的录音权限。
             // 如果使用本地功能（语记）需要提示用户开启语记的录音权限。
             if (listenCallBack != null) {
@@ -271,25 +271,20 @@ public class XFVoice implements IVoice {
                             String answer = "";
                             switch (serviceEnum) {
                                 case BAIKE://百科
-                                    answer = IflyResultParse.getAnswerData(jObject);
-
-                                    break;
                                 case CALC://计算器
+                                case DATETIME://日期
+                                case FAQ://社区问答
+                                case OPENQA://褒贬&问候&情绪
+                                case CHAT://闲聊
                                     answer = IflyResultParse.getAnswerData(jObject);
 
                                     break;
+
                                 case COOKBOOK://菜谱
                                     answer = IflyResultParse.getCookBookData(jObject);
 
                                     break;
-                                case DATETIME://日期
-                                    answer = IflyResultParse.getAnswerData(jObject);
 
-                                    break;
-                                case FAQ://社区问答
-                                    answer = IflyResultParse.getAnswerData(jObject);
-
-                                    break;
                                 case FLIGHT://航班查询
                                     // do nothing
 
@@ -328,13 +323,7 @@ public class XFVoice implements IVoice {
 
                                     break;
                                 case WEATHER://天气查询
-                                    String city = "上海市";
-                                    String area = "浦东新区";
-                                    answer = IflyResultParse.getWeatherData(jObject, city, area);
-
-                                    break;
-                                case OPENQA://褒贬&问候&情绪
-                                    answer = IflyResultParse.getAnswerData(jObject);
+                                    answer = IflyResultParse.getWeatherData(jObject);
 
                                     break;
                                 case TELEPHONE://打电话
@@ -345,14 +334,8 @@ public class XFVoice implements IVoice {
                                     // do nothing
 
                                     break;
-                                case CHAT://闲聊
-                                    answer = IflyResultParse.getAnswerData(jObject);
-
-                                    break;
                                 case PM25://空气质量
-                                    String mCity = "上海市";
-                                    String mArea = "浦东新区";
-                                    answer = IflyResultParse.getPm25Data(jObject, mCity, mArea);
+                                    answer = IflyResultParse.getPm25Data(jObject);
 
                                     break;
                                 case RADIO://电台
@@ -503,7 +486,7 @@ public class XFVoice implements IVoice {
 
     // 上传词表
     private boolean uploadUserThesaurus(String thesaurusName, String thesaurusSign) {
-        String contents = readFile(thesaurusName, "utf-8");
+        String contents = readFile(context, thesaurusName, "utf-8");
         // 指定引擎类型
         mIat.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
         // 置编码类型
@@ -517,26 +500,19 @@ public class XFVoice implements IVoice {
     }
 
     //读取asset目录下文件
-    private String readFile(String file, String code) {
-        if (null == context) {
-            Log.i(TAG, "context is null");
-            return "";
-        } else {
-            AssetManager am = context.getAssets();
-            int len = 0;
-            byte[] buf = null;
-            String result = "";
-            try {
-                InputStream in = am.open(file);
-                len = in.available();
-                buf = new byte[len];
-                in.read(buf, 0, len);
-                result = new String(buf, code);
-                in.close();
-            } catch (Exception e) {
-                Log.e(TAG, "readFile Exception==" + e.getMessage());
-            }
-            return result;
+    private String readFile(Context context, String file, String code) {
+        AssetManager am = context.getAssets();
+        String result = "";
+        try {
+            InputStream in = am.open(file);
+            int len = in.available();
+            byte[] buf = new byte[len];
+            in.read(buf, 0, len);
+            result = new String(buf, code);
+            in.close();
+        } catch (Exception e) {
+            Log.i(TAG, "readFile Exception==" + e.getMessage());
         }
+        return result;
     }
 }

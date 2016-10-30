@@ -25,7 +25,7 @@ import turing.os.http.core.RequestResult;
  * 图灵
  */
 public class TuringVoice implements IVoice {
-    private final String TAG = "voiceT";
+    private static final String TAG = "voice";
     // 图灵的appid
     private final String TURING_APPID = "8314e713b83b80dbe26264214907bce1";
     // 图灵的secret
@@ -95,7 +95,7 @@ public class TuringVoice implements IVoice {
         @Override
         public void onError(ErrorMessage errorMessage) {// 理解失败
             String msg = errorMessage.getMessage();
-            Log.i(TAG, "图灵errorMessage.getMessage()====" + msg);
+            Log.i(TAG, "图灵errorMessage====" + msg);
             if (understandCallBack != null) {
                 understandCallBack.onUnderstandResult(null, "");
             }

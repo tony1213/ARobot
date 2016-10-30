@@ -67,6 +67,10 @@ public class IflyResultParse {
 	 * service + question + answer
 	 */
     public static void parseAnswerResult(String result, ParseResultCallBack callBack) {
+        if (TextUtils.isEmpty(result)) {
+            callBack.onError("");
+            return;
+        }
         try {
             JSONTokener tokener = new JSONTokener(result);
             JSONObject jObject = new JSONObject(tokener);
@@ -142,7 +146,7 @@ public class IflyResultParse {
                     StringBuffer buffer = new StringBuffer(1024);
                     String musicSplit = "&";
                     buffer.append(singer).append(musicSplit).append(musicName).append(musicSplit).append(url);
-                    //歌手+歌名 + 歌曲src
+                    // 歌手 + 歌名 + 歌曲src
                     musics.add(buffer.toString());
                 }
             }
@@ -186,6 +190,7 @@ public class IflyResultParse {
             }
             String content = object.getString("content");// 做什么事
             buffer.append(content);
+            // 日期 + 时间 + 说的日期 + 说的时间 + 做什么事
             result = buffer.toString();
         } catch (JSONException e) {
             Log.i(TAG, "getRemindData  JSONException");
@@ -194,7 +199,7 @@ public class IflyResultParse {
     }
 
     //获取天气
-    public static String getWeatherData(JSONObject jObject, String city, String area) {
+    public static String getWeatherData(JSONObject jObject) {
         String content = "";
         try {
             JSONObject object1 = jObject.getJSONObject("semantic");
@@ -207,15 +212,17 @@ public class IflyResultParse {
                 time = "今天";
             }
             JSONObject object4 = object2.getJSONObject("location");
-            String iflyCity = object4.getString("city");// 城市
-            String iflyArea = "";
+            String city = object4.getString("city");// 城市
+            if (TextUtils.equals(city, "CURRENT_CITY")) {
+                city = "";
+            }
+            String area = "";
             if (object4.has("area")) {// 区域
-                iflyArea = object4.getString("area");// 区域
+                area = object4.getString("area");// 区域
             }
 
             JSONObject jsonObject = jObject.getJSONObject("data");
             JSONArray dataArray = jsonObject.getJSONArray("result");
-
             //天气返回的是json数组，默认使用第一个（提高解析效率）备注：第一条数据字段是最全面的。
             JSONObject object = dataArray.getJSONObject(0);
             String airQuality = "";
@@ -231,26 +238,6 @@ public class IflyResultParse {
             }
 
             StringBuffer buffer = new StringBuffer(1024);
-            if (city.contains(iflyCity)) {// 是当前城市
-                if (!TextUtils.isEmpty(iflyArea)) {
-                    buffer.append(time).append(iflyCity).append(iflyArea);
-                } else {
-                    buffer.append(time).append(iflyCity).append(area);
-                }
-            } else {// 不是当前城市
-                if (!TextUtils.isEmpty(iflyArea)) {
-                    buffer.append(time).append(iflyCity).append(iflyArea);
-                } else {
-                    if (TextUtils.equals(iflyCity, "CURRENT_CITY")) {
-                        content = buffer.append(time).append(city).append("的天气").toString();
-                        return content;
-                    } else {
-                        buffer.append(time).append(iflyCity);
-                    }
-
-                }
-            }
-
             if (TextUtils.isEmpty(airQuality)) {
                 buffer.append("天气：").append(weather).append(",风力：").append(wind).append(",气温：").append(tempRange);
             } else {
@@ -262,6 +249,9 @@ public class IflyResultParse {
             }
 
             content = buffer.toString();
+            // 时间 + 城市 + 区域 + 天气
+            content = time + "&" + city + "&" + area + "&" + content;
+
         } catch (JSONException e) {
             Log.i(TAG, "getWeatherData  JSONException");
         }
@@ -286,21 +276,23 @@ public class IflyResultParse {
     }
 
     //获取空气质量
-    public static String getPm25Data(JSONObject jObject, String city, String area) {
+    public static String getPm25Data(JSONObject jObject) {
         String content = "";
         try {
             JSONObject json1 = jObject.getJSONObject("semantic");
             JSONObject json2 = json1.getJSONObject("slots");
             JSONObject json3 = json2.getJSONObject("location");
-            String iflyCity = json3.getString("city");// 城市
-            String iflyArea = "";
+            String city = json3.getString("city");// 城市
+            if (TextUtils.equals(city, "CURRENT_CITY")) {
+                city = "";
+            }
+            String area = "";
             if (json3.has("area")) {
-                iflyArea = json3.getString("area");// 区域
+                area = json3.getString("area");// 区域
             }
 
             JSONObject jsonObject = jObject.getJSONObject("data");
             JSONArray dataArray = jsonObject.getJSONArray("result");
-
             //空气质量返回的是json数组，默认使用第一个（提高解析效率）备注：第一条数据比较准确。
             JSONObject object = dataArray.getJSONObject(0);
             String pmValue = object.getString("pm25");// pm值
@@ -308,27 +300,10 @@ public class IflyResultParse {
             String aqi = object.getString("aqi");// 空气质量指数
 
             StringBuffer buffer = new StringBuffer(1024);
-            if (city.contains(iflyCity)) {// 是当前城市
-                if (!TextUtils.isEmpty(iflyArea)) {// 有返回区
-                    buffer.append(iflyCity).append(iflyArea);
-                } else {// 没有返回区
-                    buffer.append(iflyCity).append(area);
-                }
-            } else {// 不是当前城市
-                if (!TextUtils.isEmpty(iflyArea)) {// 有返回区
-                    buffer.append(iflyCity).append(iflyArea);
-                } else {// 没有返回区
-                    if (TextUtils.equals(iflyCity, "CURRENT_CITY")) {
-                        content = buffer.append(city).append(area).append("的pm2.5").toString();
-                        return content;
-                    } else {
-                        buffer.append(iflyCity);
-                    }
-                }
-            }
-
             buffer.append("pm2.5：").append(pmValue).append(",空气质量：").append(weather).append(",空气质量指数：").append(aqi);
             content = buffer.toString();
+            // 城市 + 区域 + 空气质量
+            content = city + "&" + area + "&" + content;
 
         } catch (JSONException e) {
             Log.i(TAG, "getPm25Data  JSONException");

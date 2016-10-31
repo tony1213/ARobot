@@ -6,12 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.robot.et.R;
-import com.robot.et.business.voice.VoiceService;
-import com.robot.et.core.software.video.common.VideoConfig;
-import com.robot.et.core.software.video.impl.agora.AgoraVideo;
 import com.robot.et.lib.business.entity.User;
 import com.robot.et.lib.core.http.HttpTaskHelper;
 import com.robot.et.test.fresco.FrescoActivity;
+import com.robot.et.test.jni.JNIActivity;
 import com.robot.et.test.picasso.PicassoActivity;
 
 import butterknife.ButterKnife;
@@ -33,41 +31,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        stopService(new Intent(this, VoiceService.class));
     }
 
     @OnClick(R.id.button)
     public void goJNIMethod(){
         Log.i(TAG,"exec goJNIMethod");
-//        Intent intent = new Intent();
-//        intent.setClass(this, JNIActivity.class);
-//        startActivity(intent);
-
-        startService(new Intent(this, VoiceService.class));
+        Intent intent = new Intent();
+        intent.setClass(this, JNIActivity.class);
+        startActivity(intent);
     }
     @OnClick(R.id.button2)
     public void goRetrofitMethod(){
         Log.i(TAG,"exec goRetrofitMethod");
-//        HttpTaskHelper.gitHubAPI(this)
-//                .userInfoString("tony1213")
-//                .enqueue(new Callback<String>() {
-//                    @Override
-//                    public void onResponse(Call<String> call, Response<String> response) {
-//                        Log.e(TAG,"onResponse:"+response.body());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<String> call, Throwable t) {
-//                        Log.e(TAG,"onFailure:"+t.toString());
-//                    }
-//                });
-        new AgoraVideo(this).callPhone(VideoConfig.CALL_TYPE_VIDEO, "123", true);
+        HttpTaskHelper.gitHubAPI(this)
+                .userInfoString("tony1213")
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        Log.e(TAG,"onResponse:"+response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.e(TAG,"onFailure:"+t.toString());
+                    }
+                });
     }
 
     @OnClick(R.id.button3)

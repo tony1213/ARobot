@@ -24,7 +24,7 @@ import turing.os.http.core.RequestResult;
  * Created by houdeming on 2016/9/3.
  * 图灵
  */
-public class TuringVoice implements IVoice {
+public class TuringVoiceImpl implements IVoice {
     private static final String TAG = "voice";
     // 图灵的appid
     private final String TURING_APPID = "8314e713b83b80dbe26264214907bce1";
@@ -36,7 +36,7 @@ public class TuringVoice implements IVoice {
     private Context context;
     private UnderstandCallBack understandCallBack;
 
-    public TuringVoice(Context context) {
+    public TuringVoiceImpl(Context context) {
         this.context = context;
         initTuringSDK(TURING_SECRET, TURING_APPID, TURING_UNIQUEID);
     }

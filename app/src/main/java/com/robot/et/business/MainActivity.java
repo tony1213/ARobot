@@ -1,15 +1,143 @@
 package com.robot.et.business;
 
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
+import com.robot.et.core.software.camera.callback.CameraCallBack;
+import com.robot.et.core.software.camera.impl.local.LocalCameraImpl;
+import com.robot.et.core.software.music.callback.MusicCallBack;
+import com.robot.et.core.software.music.config.MusicConfig;
+import com.robot.et.core.software.music.impl.local.LocalMusicPlayImpl;
+import com.robot.et.core.software.music.impl.ximalaya.XiMaLaYaImpl;
+import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
+import com.robot.et.core.software.videoplay.impl.local.LocalVideoPlayImpl;
 
-public class MainActivity extends BaseActivity {
+import java.io.File;
+
+public class MainActivity extends BaseActivity implements View.OnClickListener {
+
+    private LocalMusicPlayImpl systemPlayer;
+    private XiMaLaYaImpl xima;
+    private LocalVideoPlayImpl video;
+    private LocalCameraImpl systemCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_open);
+        Button button1 = (Button) findViewById(R.id.button1);
+        Button button2 = (Button) findViewById(R.id.button2);
+        Button button3 = (Button) findViewById(R.id.button3);
+        Button button4 = (Button) findViewById(R.id.button4);
+        Button button5 = (Button) findViewById(R.id.button5);
+        Button button6 = (Button) findViewById(R.id.button6);
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+        button4.setOnClickListener(this);
+        button5.setOnClickListener(this);
+        button6.setOnClickListener(this);
+
+        systemPlayer = new LocalMusicPlayImpl(this);
+        xima = new XiMaLaYaImpl(this);
+        video = new LocalVideoPlayImpl(this);
+        systemCamera = new LocalCameraImpl(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button1:
+                playSystem();
+                break;
+            case R.id.button2:
+                playXima(MusicConfig.PLAY_MUSIC, "青花瓷");
+                break;
+            case R.id.button3:
+                playXima(MusicConfig.PLAY_RADIO, "江西音乐广播");
+                break;
+            case R.id.button4:
+                String fileSrc = Environment.getExternalStorageDirectory() + File.separator + "robot" + File.separator + "视频"
+                        + File.separator + "熊出没.mp4";
+                video.play(fileSrc, new VideoPlayCallBack() {
+                    @Override
+                    public void playStart() {
+                        Log.i("player", "playStart()");
+                    }
+
+                    @Override
+                    public void playComplected() {
+                        Log.i("player", "playComplected()");
+                    }
+
+                    @Override
+                    public void playFail() {
+                        Log.i("player", "playFail()");
+                    }
+                });
+                break;
+            case R.id.button5:
+                systemPlayer.stopPlay();
+                xima.stopPlay();
+                video.stopPlay();
+                systemCamera.closeCamera();
+                break;
+            case R.id.button6:
+                systemCamera.takePhoto(new CameraCallBack() {
+                    @Override
+                    public void onCameraResult(byte[] data) {
+                        Log.i("player", "onCameraResult()  data.length===" + data.length);
+                    }
+
+                    @Override
+                    public void onFail() {
+                        Log.i("player", "onFail()");
+                    }
+                });
+                break;
+        }
+    }
+
+    private void playSystem() {
+        systemPlayer.play(MusicConfig.PLAY_MUSIC, "http://file.diyring.cc/UserRingWorksFile/0/50284096.mp3", new MusicCallBack() {
+            @Override
+            public void playStart() {
+                Log.i("player", "playStart()");
+            }
+
+            @Override
+            public void playComplected() {
+                Log.i("player", "playComplected()");
+            }
+
+            @Override
+            public void playFail() {
+                Log.i("player", "playFail()");
+            }
+        });
+    }
+
+    private void playXima(int type, String content) {
+        xima.play(type, content, new MusicCallBack() {
+            @Override
+            public void playStart() {
+                Log.i("player", "playStart()");
+            }
+
+            @Override
+            public void playComplected() {
+                Log.i("player", "playComplected()");
+            }
+
+            @Override
+            public void playFail() {
+                Log.i("player", "playFail()");
+            }
+        });
     }
 }

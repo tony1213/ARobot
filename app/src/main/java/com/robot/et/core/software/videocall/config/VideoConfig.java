@@ -1,4 +1,4 @@
-package com.robot.et.core.software.video.common;
+package com.robot.et.core.software.videocall.config;
 
 /**
  * Created by houdeming on 2016/10/30.

@@ -1,4 +1,4 @@
-package com.robot.et.core.software.video.impl.agora;
+package com.robot.et.core.software.videocall.impl.agora;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.robot.et.R;
 import com.robot.et.app.CustomApplication;
-import com.robot.et.core.software.video.common.VideoConfig;
+import com.robot.et.core.software.videocall.config.VideoConfig;
 
 import java.util.Random;
 

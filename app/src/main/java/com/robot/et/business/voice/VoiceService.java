@@ -7,12 +7,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.core.software.voice.callback.ListenCallBack;
-import com.robot.et.core.software.voice.callback.SceneServiceEnum;
+import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
-import com.robot.et.core.software.voice.impl.ifly.XFVoice;
+import com.robot.et.core.software.voice.impl.ifly.IflyVoiceImpl;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
-import com.robot.et.core.software.voice.impl.turing.TuringVoice;
+import com.robot.et.core.software.voice.impl.turing.TuringVoiceImpl;
 
 /**
  * Created by houdeming on 2016/10/26.
@@ -20,8 +20,8 @@ import com.robot.et.core.software.voice.impl.turing.TuringVoice;
  */
 public class VoiceService extends Service {
     private final String TAG = "VoiceService";
-    private XFVoice xfVoice;
-    private TuringVoice turingVoice;
+    private IflyVoiceImpl xfVoice;
+    private TuringVoiceImpl turingVoice;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -31,8 +31,8 @@ public class VoiceService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        xfVoice = new XFVoice(this);
-        turingVoice = new TuringVoice(this);
+        xfVoice = new IflyVoiceImpl(this);
+        turingVoice = new TuringVoiceImpl(this);
 
         listen();
 

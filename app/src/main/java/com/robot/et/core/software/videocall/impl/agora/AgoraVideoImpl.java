@@ -1,18 +1,19 @@
-package com.robot.et.core.software.video.impl.agora;
+package com.robot.et.core.software.videocall.impl.agora;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.robot.et.core.software.video.IVideo;
+import com.robot.et.core.software.videocall.IVideoCall;
 
 /**
  * Created by houdeming on 2016/10/29.
  * agora视频电话
  */
-public class AgoraVideo implements IVideo {
+public class AgoraVideoImpl implements IVideoCall {
+
     private Context context;
 
-    public AgoraVideo(Context context) {
+    public AgoraVideoImpl(Context context) {
         this.context = context;
     }
 

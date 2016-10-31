@@ -24,7 +24,7 @@ import com.iflytek.cloud.UnderstanderResult;
 import com.robot.et.core.software.voice.IVoice;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
 import com.robot.et.core.software.voice.callback.ParseResultCallBack;
-import com.robot.et.core.software.voice.callback.SceneServiceEnum;
+import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
 import com.robot.et.core.software.voice.impl.ifly.util.IflyParameter;
@@ -40,7 +40,7 @@ import java.util.LinkedHashMap;
  * Created by houdeming on 2016/10/29.
  * 讯飞语音
  */
-public class XFVoice implements IVoice {
+public class IflyVoiceImpl implements IVoice {
     private static final String TAG = "voice";
     private Context context;
     private SpeechSynthesizer mTts;
@@ -52,7 +52,7 @@ public class XFVoice implements IVoice {
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
     private ListenCallBack listenCallBack;
 
-    public XFVoice(Context context) {
+    public IflyVoiceImpl(Context context) {
         this.context = context;
         // 初始化合成对象
         if (mTts == null) {

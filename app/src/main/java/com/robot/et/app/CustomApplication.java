@@ -4,9 +4,9 @@ import android.app.Application;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.robot.et.core.software.video.common.VideoConfig;
-import com.robot.et.core.software.video.impl.agora.BaseEngineEventHandlerActivity;
-import com.robot.et.core.software.video.impl.agora.MessageHandler;
+import com.robot.et.core.software.videocall.config.VideoConfig;
+import com.robot.et.core.software.videocall.impl.agora.BaseEngineEventHandlerActivity;
+import com.robot.et.core.software.videocall.impl.agora.MessageHandler;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
 
 import io.agora.rtc.RtcEngine;

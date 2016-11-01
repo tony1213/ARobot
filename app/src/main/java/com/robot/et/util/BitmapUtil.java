@@ -1,4 +1,4 @@
-package com.robot.et.core.software.camera.util;
+package com.robot.et.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

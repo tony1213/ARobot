@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
     <Button
         android:id="@+id/button1"
         android:text="playSystemMusic"
@@ -40,5 +48,19 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         />
+    <Button
+        android:id="@+id/button7"
+        android:text="alarm"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        />
+    <Button
+        android:id="@+id/button8"
+        android:text="face"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        />
 
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

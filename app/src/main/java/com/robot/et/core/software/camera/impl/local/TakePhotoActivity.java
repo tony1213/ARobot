@@ -20,7 +20,7 @@ import android.view.WindowManager;
 import com.iflytek.cloud.util.Accelerometer;
 import com.robot.et.R;
 import com.robot.et.core.software.camera.callback.CameraCallBack;
-import com.robot.et.core.software.camera.util.BitmapUtil;
+import com.robot.et.util.BitmapUtil;
 
 import java.io.IOException;
 

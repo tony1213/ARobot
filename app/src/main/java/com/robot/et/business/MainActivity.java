@@ -10,12 +10,15 @@ import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
 import com.robot.et.core.software.camera.callback.CameraCallBack;
 import com.robot.et.core.software.camera.impl.local.LocalCameraImpl;
+import com.robot.et.core.software.face.callback.FaceCallBack;
+import com.robot.et.core.software.face.impl.iflytek.IflyFaceImpl;
 import com.robot.et.core.software.music.callback.MusicCallBack;
 import com.robot.et.core.software.music.config.MusicConfig;
 import com.robot.et.core.software.music.impl.local.LocalMusicPlayImpl;
 import com.robot.et.core.software.music.impl.ximalaya.XiMaLaYaImpl;
 import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
 import com.robot.et.core.software.videoplay.impl.local.LocalVideoPlayImpl;
+import com.robot.et.util.AlarmRemindManager;
 
 import java.io.File;
 
@@ -25,6 +28,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private XiMaLaYaImpl xima;
     private LocalVideoPlayImpl video;
     private LocalCameraImpl systemCamera;
+    private IflyFaceImpl face;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,17 +40,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Button button4 = (Button) findViewById(R.id.button4);
         Button button5 = (Button) findViewById(R.id.button5);
         Button button6 = (Button) findViewById(R.id.button6);
+        Button button7 = (Button) findViewById(R.id.button7);
+        Button button8 = (Button) findViewById(R.id.button8);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
         button6.setOnClickListener(this);
+        button7.setOnClickListener(this);
+        button8.setOnClickListener(this);
 
         systemPlayer = new LocalMusicPlayImpl(this);
         xima = new XiMaLaYaImpl(this);
         video = new LocalVideoPlayImpl(this);
         systemCamera = new LocalCameraImpl(this);
+        face = new IflyFaceImpl(this);
     }
 
     @Override
@@ -100,7 +109,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
                 });
                 break;
+            case R.id.button7:
+                addAlarm();
+                break;
+            case R.id.button8:
+                face();
+                break;
         }
+    }
+
+    private void face() {
+        face.openFaceDistinguish(true, null, new FaceCallBack() {
+            @Override
+            public void onFaceResult(boolean isDistinguishSuccess, String content) {
+                Log.i("faceImpl", "isDistinguishSuccess==" + isDistinguishSuccess);
+                Log.i("faceImpl", "content==" + content);
+            }
+
+            @Override
+            public void onFaceError() {
+                Log.i("faceImpl", "onFaceError()");
+            }
+        });
+    }
+
+    private void addAlarm() {
+        // 日期 + 时间 + 说的日期 + 说的时间 + 做什么事（中间以&连接）
+        String data = "2016-11-01";
+        String time = "16:06:19";
+        String content = "开会";
+        String tips = AlarmRemindManager.getVoiceRemindTips(AlarmRemindManager.getRemindInfo("", data, time, content));
+        Log.i("alarm", "tips==" + tips);
     }
 
     private void playSystem() {

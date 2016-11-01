@@ -18,8 +18,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -51,7 +53,7 @@
             android:name=".core.software.videoplay.impl.local.LocalVideoPlayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
         <activity
             android:name=".core.software.camera.impl.local.TakePhotoActivity"
@@ -59,8 +61,16 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
+        <activity
+            android:name=".core.software.face.impl.iflytek.IflyFaceDistinguishActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+
         <service android:name=".business.voice.VoiceService" />
         <service android:name=".core.software.music.impl.local.LocalPlayerService" />
+
+        <receiver android:name=".core.software.system.AlarmRemindReceiver" />
 
         <!-- ximalaya  begin -->
         <meta-data

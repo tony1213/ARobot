@@ -6,13 +6,14 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.robot.et.core.software.voice.IVoice;
+import com.robot.et.core.software.voice.IflyVoiceFactory;
+import com.robot.et.core.software.voice.TuringVoiceFactory;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
-import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
-import com.robot.et.core.software.voice.impl.ifly.IflyVoiceImpl;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
-import com.robot.et.core.software.voice.impl.turing.TuringVoiceImpl;
+import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 
 /**
  * Created by houdeming on 2016/10/26.
@@ -20,8 +21,8 @@ import com.robot.et.core.software.voice.impl.turing.TuringVoiceImpl;
  */
 public class VoiceService extends Service {
     private final String TAG = "VoiceService";
-    private IflyVoiceImpl xfVoice;
-    private TuringVoiceImpl turingVoice;
+    private IVoice xfVoice;
+    private IVoice turingVoice;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -31,8 +32,8 @@ public class VoiceService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        xfVoice = new IflyVoiceImpl(this);
-        turingVoice = new TuringVoiceImpl(this);
+        xfVoice = new IflyVoiceFactory().createVoice(this);
+        turingVoice = new TuringVoiceFactory().createVoice(this);
 
         listen();
 
@@ -131,12 +132,12 @@ public class VoiceService extends Service {
                         }
 
                     }
-                     speak(understandResult);
+                    speak(understandResult);
                 } else {
                     turingVoice.understanderText(result, new UnderstandCallBack() {
                         @Override
                         public void onUnderstandResult(SceneServiceEnum serviceEnum, String understandResult) {
-                            Log.i(TAG, " tuling understandResult==" + understandResult);
+                            Log.i(TAG, "tuling understandResult==" + understandResult);
                             if (!TextUtils.isEmpty(understandResult)) {
                                 speak(understandResult);
                             } else {

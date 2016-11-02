@@ -1,5 +1,6 @@
 package com.robot.et.business;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.widget.Button;
 
 import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
+import com.robot.et.business.voice.VoiceService;
 import com.robot.et.core.software.camera.ICamera;
 import com.robot.et.core.software.camera.LocalCameraFactory;
 import com.robot.et.core.software.camera.callback.CameraCallBack;
@@ -37,6 +39,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private IMusic local;
     private IMusic ximalaya;
     private IVideoCall videoCall;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Button button7 = (Button) findViewById(R.id.button7);
         Button button8 = (Button) findViewById(R.id.button8);
         Button button9 = (Button) findViewById(R.id.button9);
+        Button button10 = (Button) findViewById(R.id.button10);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
@@ -60,6 +64,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         button7.setOnClickListener(this);
         button8.setOnClickListener(this);
         button9.setOnClickListener(this);
+        button10.setOnClickListener(this);
 
         face = new IflyFaceFactory().createFace(this);
         systemCamera = new LocalCameraFactory().createCamera(this);
@@ -129,6 +134,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.button9:
                 videoCall.callPhone(VideoCallConfig.CALL_TYPE_VIDEO, "123", true);
                 break;
+            case R.id.button10:
+                intent = new Intent(this, VoiceService.class);
+                startService(intent);
+                break;
         }
     }
 
@@ -192,5 +201,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 Log.i("player", "playFail()");
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (intent != null) {
+            stopService(intent);
+        }
     }
 }

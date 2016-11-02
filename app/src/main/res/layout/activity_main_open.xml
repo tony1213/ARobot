@@ -66,6 +66,12 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         />
+    <Button
+        android:id="@+id/button10"
+        android:text="voice"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        />
 
         </LinearLayout>
     </ScrollView>

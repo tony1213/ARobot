@@ -57,7 +57,7 @@ public class AlarmRemindReceiver extends BroadcastReceiver {
                         Log.i(ALARM_TAG, "APP设置的闹铃");
                         minute += 24 * 60 * 60 * 1000;
                         AlarmRemindManager.updateRemindInfo(info, minute, AlarmRemindManager.ALARM_ALL_DAY);
-                        AlarmRemindManager.setAlarmClock(minute);
+                        AlarmRemindManager.addAlarmClock(minute);
                     }
 
                 } else {//不是每天
@@ -66,7 +66,7 @@ public class AlarmRemindReceiver extends BroadcastReceiver {
                     } else {
                         minute += 24 * 60 * 60 * 1000;
                         AlarmRemindManager.updateRemindInfo(info, minute, frequency - 1);
-                        AlarmRemindManager.setAlarmClock(minute);
+                        AlarmRemindManager.addAlarmClock(minute);
                     }
                 }
             }

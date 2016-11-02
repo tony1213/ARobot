@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         String data = "2016-11-01";
         String time = "16:06:19";
         String content = "开会";
-        String tips = AlarmRemindManager.getVoiceRemindTips(AlarmRemindManager.getRemindInfo("", data, time, content));
+        String tips = AlarmRemindManager.getRemindSpeakTips(AlarmRemindManager.getRemindInfo("", data, time, content));
         Log.i("alarm", "tips==" + tips);
     }
 

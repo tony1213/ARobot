@@ -16,13 +16,14 @@ public class RobotLearnManager {
 
     /**
      * 增加智能学习的问题与答案
-     * @param question 问题
-     * @param answer 答案
-     * @param action 动作
+     *
+     * @param question  问题
+     * @param answer    答案
+     * @param action    动作
      * @param learnType 类型
      * @return
      */
-    public static boolean insertLeanInfo(String robotNum, String question, String answer, String action, int learnType) {
+    public static boolean addLeanInfo(String robotNum, String question, String answer, String action, int learnType) {
         LearnQuestionInfo info = new LearnQuestionInfo();
         info.setRobotNum(robotNum);
         info.setQuestion(question);
@@ -40,8 +41,49 @@ public class RobotLearnManager {
     }
 
     /**
+     * 机器人学习
+     *
+     * @param robotNum          机器编号
+     * @param learnType         类型
+     * @param questionAndAnswer 内容
+     * @return
+     */
+    public static boolean addLeanInfo(String robotNum, String questionAndAnswer, int learnType) {
+        if (!TextUtils.isEmpty(questionAndAnswer)) {
+            String question = MatchStringUtil.getQuestion(questionAndAnswer);
+            String answer = MatchStringUtil.getAnswer(questionAndAnswer);
+            Log.i(LEARN_TAG, "question===" + question);
+            Log.i(LEARN_TAG, "answer===" + answer);
+            if (!TextUtils.isEmpty(question) && !TextUtils.isEmpty(answer)) {
+                return addLeanInfo(robotNum, question, answer, "", learnType);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取机器人学习的信息
+     *
+     * @param result 内容
+     * @return
+     */
+    public static LearnAnswerInfo getLearnInfo(String result) {
+        LearnAnswerInfo info = null;
+        if (!TextUtils.isEmpty(result)) {
+            RobotDB mDb = RobotDB.getInstance();
+            int questionId = mDb.getQuestionId(result);
+            Log.i(LEARN_TAG, "questionId====" + questionId);
+            if (questionId != -1) {
+                info = mDb.getLearnAnswer(questionId);
+            }
+        }
+        return info;
+    }
+
+    /**
      * 把学习内容加入到数据库
-     * @param info 问题信息
+     *
+     * @param info  问题信息
      * @param aInfo 答案信息
      * @return
      */
@@ -63,43 +105,5 @@ public class RobotLearnManager {
             return true;
         }
         return false;
-    }
-
-    /**
-     * 机器人学习
-     * @param robotNum 机器编号
-     * @param learnType 类型
-     * @param questionAndAnswer 内容
-     * @return
-     */
-    public static boolean learn(String robotNum, int learnType, String questionAndAnswer) {
-        if (!TextUtils.isEmpty(questionAndAnswer)) {
-            String question = MatchStringUtil.getQuestion(questionAndAnswer);
-            String answer = MatchStringUtil.getAnswer(questionAndAnswer);
-            Log.i(LEARN_TAG, "question===" + question);
-            Log.i(LEARN_TAG, "answer===" + answer);
-            if (!TextUtils.isEmpty(question) && !TextUtils.isEmpty(answer)) {
-                return insertLeanInfo(robotNum, question, answer, "", learnType);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 获取机器人学习的信息
-     * @param result 内容
-     * @return
-     */
-    public static LearnAnswerInfo getLearnAnswerInfo(String result) {
-        LearnAnswerInfo info = null;
-        if (!TextUtils.isEmpty(result)) {
-            RobotDB mDb = RobotDB.getInstance();
-            int questionId = mDb.getQuestionId(result);
-            Log.i(LEARN_TAG, "questionId====" + questionId);
-            if (questionId != -1) {
-                info = mDb.getLearnAnswer(questionId);
-            }
-        }
-        return info;
     }
 }

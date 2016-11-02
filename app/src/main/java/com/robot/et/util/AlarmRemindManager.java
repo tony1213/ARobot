@@ -31,7 +31,7 @@ public class AlarmRemindManager {
      * @param date 日期 yyyy-MM-dd
      * @param time 时间 HH:mm:ss
      */
-    public static void setAlarmClock(String date, String time) {
+    public static void addAlarmClock(String date, String time) {
         Calendar calendar = DateTools.getCalendar(date, time);
         long currentMinute = System.currentTimeMillis();
         StringBuffer buffer = new StringBuffer(1024);
@@ -44,14 +44,14 @@ public class AlarmRemindManager {
      *
      * @param minute 时间
      */
-    public static void setAlarmClock(long minute) {
+    public static void addAlarmClock(long minute) {
         String tempTime = DateTools.getCurrentTimeDetail(minute);
         String[] times = tempTime.split(" ");
         String date = times[0];
         String time = times[1];
         Log.i(ALARM_TAG, "date===" + date);
         Log.i(ALARM_TAG, "time===" + time);
-        setAlarmClock(date, time);
+        addAlarmClock(date, time);
     }
 
     /**
@@ -127,13 +127,13 @@ public class AlarmRemindManager {
      * @param remindInfo 提醒的信息
      * @return
      */
-    private static boolean addVoiceRemind(RemindInfo remindInfo) {
+    private static boolean addRemindInfo(RemindInfo remindInfo) {
         if (remindInfo != null) {
             remindInfo.setRemindInt(REMIND_NO_ID);
             remindInfo.setFrequency(1);
             boolean flag = addAlarm(remindInfo);
             if (flag) {
-                setAlarmClock(remindInfo.getDate(), remindInfo.getTime());
+                addAlarmClock(remindInfo.getDate(), remindInfo.getTime());
                 return flag;
             }
         }
@@ -162,8 +162,8 @@ public class AlarmRemindManager {
      * @param info
      * @return
      */
-    public static String getVoiceRemindTips(RemindInfo info) {
-        boolean flag = addVoiceRemind(info);
+    public static String getRemindSpeakTips(RemindInfo info) {
+        boolean flag = addRemindInfo(info);
         String content = "";
         if (flag) {
             // 格式：好的，明天xx时间提醒xx
@@ -190,7 +190,7 @@ public class AlarmRemindManager {
      * 获取多个闹铃提示
      * @return
      */
-    public static String getMoreAlarmContent() {
+    public static String getMoreAlarmContentTips() {
         String content = "";
         List<String> datas = getAlarmDatas();
         int size = datas.size();

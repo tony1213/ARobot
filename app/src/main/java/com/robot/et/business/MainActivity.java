@@ -8,8 +8,9 @@ import android.widget.Button;
 
 import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
+import com.robot.et.core.software.camera.ICamera;
+import com.robot.et.core.software.camera.LocalCameraFactory;
 import com.robot.et.core.software.camera.callback.CameraCallBack;
-import com.robot.et.core.software.camera.impl.local.LocalCameraImpl;
 import com.robot.et.core.software.face.IFace;
 import com.robot.et.core.software.face.IflyFaceFactory;
 import com.robot.et.core.software.face.callback.FaceCallBack;
@@ -28,7 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LocalMusicPlayImpl systemPlayer;
     private XiMaLaYaImpl xima;
     private LocalVideoPlayImpl video;
-    private LocalCameraImpl systemCamera;
+    private ICamera systemCamera;
     private IFace face;
 
     @Override
@@ -55,8 +56,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         systemPlayer = new LocalMusicPlayImpl(this);
         xima = new XiMaLaYaImpl(this);
         video = new LocalVideoPlayImpl(this);
-        systemCamera = new LocalCameraImpl(this);
         face = new IflyFaceFactory().createFace(this);
+        systemCamera = new LocalCameraFactory().createCamera(this);
     }
 
     @Override

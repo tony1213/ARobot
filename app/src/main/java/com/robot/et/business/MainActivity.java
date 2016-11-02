@@ -22,15 +22,16 @@ import com.robot.et.core.software.music.config.MusicConfig;
 import com.robot.et.core.software.videocall.AgoraFactory;
 import com.robot.et.core.software.videocall.IVideoCall;
 import com.robot.et.core.software.videocall.config.VideoCallConfig;
+import com.robot.et.core.software.videoplay.IVideoPlay;
+import com.robot.et.core.software.videoplay.LocalVideoPlayFactory;
 import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
-import com.robot.et.core.software.videoplay.impl.local.LocalVideoPlayImpl;
 import com.robot.et.util.AlarmRemindManager;
 
 import java.io.File;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    private LocalVideoPlayImpl video;
+    private IVideoPlay videoPlay;
     private ICamera systemCamera;
     private IFace face;
     private IMusic local;
@@ -60,12 +61,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         button8.setOnClickListener(this);
         button9.setOnClickListener(this);
 
-        video = new LocalVideoPlayImpl(this);
         face = new IflyFaceFactory().createFace(this);
         systemCamera = new LocalCameraFactory().createCamera(this);
         local = new LocalMusicFactory().createMusic(this);
         ximalaya = new XiMaLaYaFactory().createMusic(this);
         videoCall = new AgoraFactory().createVideoCall(this);
+        videoPlay = new LocalVideoPlayFactory().createVideoPlay(this);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.button4:
                 String fileSrc = Environment.getExternalStorageDirectory() + File.separator + "robot" + File.separator + "视频"
                         + File.separator + "熊出没.mp4";
-                video.play(fileSrc, new VideoPlayCallBack() {
+                videoPlay.play(fileSrc, new VideoPlayCallBack() {
                     @Override
                     public void playStart() {
                         Log.i("player", "playStart()");
@@ -103,7 +104,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.button5:
                 local.stopPlay();
                 ximalaya.stopPlay();
-                video.stopPlay();
+                videoPlay.stopPlay();
                 systemCamera.closeCamera();
                 break;
             case R.id.button6:

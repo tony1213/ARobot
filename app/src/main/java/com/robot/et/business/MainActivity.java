@@ -14,10 +14,11 @@ import com.robot.et.core.software.camera.callback.CameraCallBack;
 import com.robot.et.core.software.face.IFace;
 import com.robot.et.core.software.face.IflyFaceFactory;
 import com.robot.et.core.software.face.callback.FaceCallBack;
+import com.robot.et.core.software.music.IMusic;
+import com.robot.et.core.software.music.LocalMusicFactory;
+import com.robot.et.core.software.music.XiMaLaYaFactory;
 import com.robot.et.core.software.music.callback.MusicCallBack;
 import com.robot.et.core.software.music.config.MusicConfig;
-import com.robot.et.core.software.music.impl.local.LocalMusicPlayImpl;
-import com.robot.et.core.software.music.impl.ximalaya.XiMaLaYaImpl;
 import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
 import com.robot.et.core.software.videoplay.impl.local.LocalVideoPlayImpl;
 import com.robot.et.util.AlarmRemindManager;
@@ -26,11 +27,11 @@ import java.io.File;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    private LocalMusicPlayImpl systemPlayer;
-    private XiMaLaYaImpl xima;
     private LocalVideoPlayImpl video;
     private ICamera systemCamera;
     private IFace face;
+    private IMusic local;
+    private IMusic ximalaya;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         button7.setOnClickListener(this);
         button8.setOnClickListener(this);
 
-        systemPlayer = new LocalMusicPlayImpl(this);
-        xima = new XiMaLaYaImpl(this);
         video = new LocalVideoPlayImpl(this);
         face = new IflyFaceFactory().createFace(this);
         systemCamera = new LocalCameraFactory().createCamera(this);
+        local = new LocalMusicFactory().createMusic(this);
+        ximalaya = new XiMaLaYaFactory().createMusic(this);
     }
 
     @Override
@@ -93,8 +94,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 });
                 break;
             case R.id.button5:
-                systemPlayer.stopPlay();
-                xima.stopPlay();
+                local.stopPlay();
+                ximalaya.stopPlay();
                 video.stopPlay();
                 systemCamera.closeCamera();
                 break;
@@ -145,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void playSystem() {
-        systemPlayer.play(MusicConfig.PLAY_MUSIC, "http://file.diyring.cc/UserRingWorksFile/0/50284096.mp3", new MusicCallBack() {
+        local.play(MusicConfig.PLAY_MUSIC, "http://file.diyring.cc/UserRingWorksFile/0/50284096.mp3", new MusicCallBack() {
             @Override
             public void playStart() {
                 Log.i("player", "playStart()");
@@ -164,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void playXima(int type, String content) {
-        xima.play(type, content, new MusicCallBack() {
+        ximalaya.play(type, content, new MusicCallBack() {
             @Override
             public void playStart() {
                 Log.i("player", "playStart()");

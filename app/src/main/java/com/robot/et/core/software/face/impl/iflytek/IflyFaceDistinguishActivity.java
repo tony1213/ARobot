@@ -36,7 +36,6 @@ import com.robot.et.core.software.face.impl.iflytek.util.FaceRect;
 import com.robot.et.core.software.face.impl.iflytek.util.FaceUtil;
 import com.robot.et.entity.FaceInfo;
 import com.robot.et.util.BitmapUtil;
-import com.robot.et.util.FaceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,8 +82,11 @@ public class IflyFaceDistinguishActivity extends Activity {
     private boolean isVerify;//是否在验证
     public static IflyFaceDistinguishActivity instance;
     private List<FaceInfo> faceInfos = new ArrayList<FaceInfo>();
-    private boolean isVoiceOpen;
     private FaceCallBack mCallBack;
+    private String faceName;
+    private static final int FACE_ERROR = 1;// 异常
+    private static final int FACE_REGISTER = 2;// 注册
+    private static final int FACE_DISTINGUISH = 3;// 识别
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,6 @@ public class IflyFaceDistinguishActivity extends Activity {
         // 获取已注册人脸的数据
         Intent intent = getIntent();
         faceInfos = intent.getParcelableArrayListExtra("FaceInfo");
-        isVoiceOpen = intent.getBooleanExtra("isVoiceOpen", false);
         mCallBack = IflyFaceImpl.getCallBack();
 
     }
@@ -192,10 +193,7 @@ public class IflyFaceDistinguishActivity extends Activity {
             Log.i(FACE_TAG, "Camera Exception==" + e.getMessage());
             // 关闭相机
             closeCamera();
-            finish();
-            if (mCallBack != null) {
-                mCallBack.onFaceError();
-            }
+            sendMsg(FACE_ERROR, false, "");
             return;
         }
 
@@ -293,7 +291,7 @@ public class IflyFaceDistinguishActivity extends Activity {
                             if (noFaceCount >= 250) {
                                 mStopTrack = true;
                                 noFaceCount = 0;
-                                sendMsg("请让我看见你", false);
+                                sendMsg(FACE_DISTINGUISH, false, "");
                             } else {
                                 mFaceSurface.getHolder().unlockCanvasAndPost(canvas);
                                 continue;
@@ -411,8 +409,8 @@ public class IflyFaceDistinguishActivity extends Activity {
             if (faceInfos != null && size > 0) {
                 FaceInfo info = faceInfos.get(0);
                 String auId = info.getAuthorId();
-                FaceManager.setAuthorName(info.getAuthorName());
-                FaceManager.setNewFaceInfo(faceInfos);
+                faceName = info.getAuthorName();
+                setNewFaceInfo(faceInfos);
                 verify(mImageData, auId);
             } else {
                 registerFace(mImageData);
@@ -498,7 +496,7 @@ public class IflyFaceDistinguishActivity extends Activity {
                     isVerify = false;
                     isSendAngle = false;
                 } else {
-                    sendMsg("您离我太远了，可以靠近一点再试试吗", false);
+                    sendMsg(FACE_REGISTER, false, "");
                 }
             }
         }
@@ -509,16 +507,15 @@ public class IflyFaceDistinguishActivity extends Activity {
         int ret = obj.getInt("ret");
         if (ret != 0) {
             Log.i(FACE_TAG, "注册失败");
-            sendMsg("可以靠近点，让我再认识你一次吗？", false);
+            sendMsg(FACE_REGISTER, false, "");
             return;
         }
         if ("success".equals(obj.get("rst"))) {
             Log.i(FACE_TAG, "注册成功");
-            FaceManager.setAuthorId(auId);
-            sendMsg("你好，我叫小雪，请问你叫什么名字呢？", true);
+            sendMsg(FACE_REGISTER, true, auId);
         } else {
             Log.i(FACE_TAG, "注册失败");
-            sendMsg("可以靠近点，让我再认识你一次吗？", false);
+            sendMsg(FACE_REGISTER, false, "");
         }
     }
 
@@ -527,32 +524,38 @@ public class IflyFaceDistinguishActivity extends Activity {
         int ret = obj.getInt("ret");
         if (ret != 0) {
             Log.i(FACE_TAG, "验证失败");
-            handleFace(mImageData, FaceManager.getFaceInfos());
+            handleFace(mImageData, getFaceInfos());
             return;
         }
         if ("success".equals(obj.get("rst"))) {
             if (obj.getBoolean("verf")) {
                 Log.i(FACE_TAG, "通过验证");
-                if (isVoiceOpen) {//语音开启人脸识别
-                    sendMsg("你是" + FaceManager.getAuthorName(), true);
-                } else {//人体感应开启人脸识别
-                    sendMsg("很高兴又见到你，" + FaceManager.getAuthorName() + ",有什么可以帮你", true);
-                }
+                sendMsg(FACE_DISTINGUISH, true, faceName);
             } else {
                 Log.i(FACE_TAG, "验证不通过");
-                handleFace(mImageData, FaceManager.getFaceInfos());
+                handleFace(mImageData, getFaceInfos());
             }
         } else {
             Log.i(FACE_TAG, "验证失败");
-            handleFace(mImageData, FaceManager.getFaceInfos());
+            handleFace(mImageData, getFaceInfos());
         }
     }
 
-    // 发送说话的广播
-    private void sendMsg(String content, boolean isVerifySuccess) {
+    // 回调结果
+    private void sendMsg(int type, boolean flag, String content) {
         finish();
         if (mCallBack != null) {
-            mCallBack.onFaceResult(isVerifySuccess, content);
+            switch (type) {
+                case FACE_ERROR:
+                    mCallBack.onFaceError();
+                    break;
+                case FACE_REGISTER:
+                    mCallBack.onFaceRegister(flag, content);
+                    break;
+                case FACE_DISTINGUISH:
+                    mCallBack.onFaceDistinguish(flag, content);
+                    break;
+            }
         }
     }
 
@@ -562,6 +565,27 @@ public class IflyFaceDistinguishActivity extends Activity {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         String dateTime = format.format(date);
         return dateTime;
+    }
+
+    // 人脸的信息
+    private static List<FaceInfo> infos = new ArrayList<FaceInfo>();
+
+    /**
+     * 设置新的脸部数据
+     * @param faceInfos 脸部数据
+     */
+    private void setNewFaceInfo(List<FaceInfo> faceInfos) {
+        int size = faceInfos.size();
+        if (faceInfos != null && size > 0) {
+            faceInfos.remove(0);
+            infos = faceInfos;
+        } else {
+            infos = null;
+        }
+    }
+
+    private List<FaceInfo> getFaceInfos() {
+        return infos;
     }
 }
 

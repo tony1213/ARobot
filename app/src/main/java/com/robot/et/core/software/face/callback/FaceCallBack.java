@@ -6,11 +6,18 @@ package com.robot.et.core.software.face.callback;
  */
 public interface FaceCallBack {
     /**
-     * 脸部识别的结果
+     * 脸部识别
      * @param isDistinguishSuccess 识别是否成功
-     * @param content 返回的内容
+     * @param faceName 人脸对应的名字
      */
-    void onFaceResult(boolean isDistinguishSuccess, String content);
+    void onFaceDistinguish(boolean isDistinguishSuccess, String faceName);
+
+    /**
+     * 脸部注册
+     * @param isRegisterSuccess 是否注册成功
+     * @param registerId 注册的ID
+     */
+    void onFaceRegister(boolean isRegisterSuccess, String registerId);
 
     /**
      * 人脸识别异常

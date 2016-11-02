@@ -143,10 +143,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void face() {
         face.openFaceDistinguish(true, null, new FaceCallBack() {
+
             @Override
-            public void onFaceResult(boolean isDistinguishSuccess, String content) {
+            public void onFaceDistinguish(boolean isDistinguishSuccess, String faceName) {
                 Log.i("faceImpl", "isDistinguishSuccess==" + isDistinguishSuccess);
-                Log.i("faceImpl", "content==" + content);
+                Log.i("faceImpl", "faceName==" + faceName);
+            }
+
+            @Override
+            public void onFaceRegister(boolean isRegisterSuccess, String registerId) {
+                Log.i("faceImpl", "isRegisterSuccess==" + isRegisterSuccess);
+                Log.i("faceImpl", "registerId==" + registerId);
             }
 
             @Override

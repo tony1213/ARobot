@@ -30,7 +30,6 @@ public class IflyFaceImpl implements IFace {
         this.callBack = callBack;
         Intent intent = new Intent(context, IflyFaceDistinguishActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("isVoiceOpen", isVoiceOpen);
         intent.putExtra("FaceInfo", infos);
         context.startActivity(intent);
     }

@@ -19,6 +19,9 @@ import com.robot.et.core.software.music.LocalMusicFactory;
 import com.robot.et.core.software.music.XiMaLaYaFactory;
 import com.robot.et.core.software.music.callback.MusicCallBack;
 import com.robot.et.core.software.music.config.MusicConfig;
+import com.robot.et.core.software.videocall.AgoraFactory;
+import com.robot.et.core.software.videocall.IVideoCall;
+import com.robot.et.core.software.videocall.config.VideoCallConfig;
 import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
 import com.robot.et.core.software.videoplay.impl.local.LocalVideoPlayImpl;
 import com.robot.et.util.AlarmRemindManager;
@@ -32,6 +35,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private IFace face;
     private IMusic local;
     private IMusic ximalaya;
+    private IVideoCall videoCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Button button6 = (Button) findViewById(R.id.button6);
         Button button7 = (Button) findViewById(R.id.button7);
         Button button8 = (Button) findViewById(R.id.button8);
+        Button button9 = (Button) findViewById(R.id.button9);
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
@@ -53,12 +58,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         button6.setOnClickListener(this);
         button7.setOnClickListener(this);
         button8.setOnClickListener(this);
+        button9.setOnClickListener(this);
 
         video = new LocalVideoPlayImpl(this);
         face = new IflyFaceFactory().createFace(this);
         systemCamera = new LocalCameraFactory().createCamera(this);
         local = new LocalMusicFactory().createMusic(this);
         ximalaya = new XiMaLaYaFactory().createMusic(this);
+        videoCall = new AgoraFactory().createVideoCall(this);
     }
 
     @Override
@@ -117,6 +124,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.button8:
                 face();
+                break;
+            case R.id.button9:
+                videoCall.callPhone(VideoCallConfig.CALL_TYPE_VIDEO, "123", true);
                 break;
         }
     }

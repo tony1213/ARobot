@@ -3,7 +3,7 @@ package com.robot.et.core.software.videocall.config;
 /**
  * Created by houdeming on 2016/10/30.
  */
-public class VideoConfig {
+public class VideoCallConfig {
     //声网arora key值
     public static final String AGORA_KEY = "67ddec80abde4933b1672a186c9bdb3e";
     // 视频

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.robot.et.R;
 import com.robot.et.app.CustomApplication;
-import com.robot.et.core.software.videocall.config.VideoConfig;
+import com.robot.et.core.software.videocall.config.VideoCallConfig;
 
 import java.util.Random;
 
@@ -66,13 +66,13 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         setRemoteUserViewVisibility(false);
         isLook = false;
         switch (mCallingType) {
-            case VideoConfig.CALL_TYPE_VIDEO:// 视频
+            case VideoCallConfig.CALL_TYPE_VIDEO:// 视频
                 video();
                 break;
-            case VideoConfig.CALL_TYPE_VOICE:// 语音
+            case VideoCallConfig.CALL_TYPE_VOICE:// 语音
                 voice();
                 break;
-            case VideoConfig.CALL_TYPE_LOOK:// 查看
+            case VideoCallConfig.CALL_TYPE_LOOK:// 查看
                 isLook = true;
                 video();
                 break;
@@ -108,7 +108,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
 
     //加入通话频道
     private void setupChannel() {
-        rtcEngine.joinChannel(VideoConfig.AGORA_KEY, channelId, "", new Random().nextInt(Math.abs((int) System.currentTimeMillis())));
+        rtcEngine.joinChannel(VideoCallConfig.AGORA_KEY, channelId, "", new Random().nextInt(Math.abs((int) System.currentTimeMillis())));
     }
 
     // 初始化声网的RtcEngine对象
@@ -142,7 +142,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
 
     //语音通话
     private void voice() {
-        mCallingType = VideoConfig.CALL_TYPE_VOICE;
+        mCallingType = VideoCallConfig.CALL_TYPE_VOICE;
 
         ensureLocalViewIsCreated();
 
@@ -160,7 +160,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                updateRemoteUserViews(VideoConfig.CALL_TYPE_VOICE);
+                updateRemoteUserViews(VideoCallConfig.CALL_TYPE_VOICE);
             }
         }, 500);
 
@@ -170,15 +170,15 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
     private void video() {
         ensureLocalViewIsCreated();
 
-        if (mCallingType == VideoConfig.CALL_TYPE_VIDEO) { // 视频
+        if (mCallingType == VideoCallConfig.CALL_TYPE_VIDEO) { // 视频
             rtcEngine.setEnableSpeakerphone(true);// 扬声器开
             rtcEngine.muteAllRemoteAudioStreams(false);
-        } else if (mCallingType == VideoConfig.CALL_TYPE_LOOK) { // 查看
+        } else if (mCallingType == VideoCallConfig.CALL_TYPE_LOOK) { // 查看
             rtcEngine.setEnableSpeakerphone(false);// 扬声器关
             rtcEngine.muteAllRemoteAudioStreams(true);//静音所有远端音频
         }
 
-        mCallingType = VideoConfig.CALL_TYPE_VIDEO;
+        mCallingType = VideoCallConfig.CALL_TYPE_VIDEO;
 
         rtcEngine.enableVideo();
         rtcEngine.muteLocalVideoStream(false);
@@ -194,7 +194,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                updateRemoteUserViews(VideoConfig.CALL_TYPE_VIDEO);
+                updateRemoteUserViews(VideoCallConfig.CALL_TYPE_VIDEO);
             }
         }, 500);
 
@@ -208,9 +208,9 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
     //切换视频音频通话时，更新 view 的显示。只是更新重用的 view，并不新添加
     private void updateRemoteUserViews(int callingType) {
         int visibility = View.GONE;
-        if (callingType == VideoConfig.CALL_TYPE_VIDEO) {
+        if (callingType == VideoCallConfig.CALL_TYPE_VIDEO) {
             visibility = View.GONE;
-        } else if (callingType == VideoConfig.CALL_TYPE_VOICE) {
+        } else if (callingType == VideoCallConfig.CALL_TYPE_VOICE) {
             visibility = View.VISIBLE;
         }
 
@@ -219,7 +219,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
             View singleRemoteView = mRemoteUserContainer.getChildAt(i);
             singleRemoteView.findViewById(R.id.remote_user_voice_container).setVisibility(visibility);
 
-            if (callingType == VideoConfig.CALL_TYPE_VIDEO) {
+            if (callingType == VideoCallConfig.CALL_TYPE_VIDEO) {
                 FrameLayout remoteVideoUser = (FrameLayout) singleRemoteView.findViewById(R.id.viewlet_remote_video_user);
                 if (remoteVideoUser.getChildCount() > 0) {
                     final SurfaceView remoteView = (SurfaceView) remoteVideoUser.getChildAt(0);
@@ -308,7 +308,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
                     }, 500);
                 }
 
-                if (remoteUserView != null && mCallingType == VideoConfig.CALL_TYPE_VIDEO) {
+                if (remoteUserView != null && mCallingType == VideoCallConfig.CALL_TYPE_VIDEO) {
                     remoteUserView.findViewById(R.id.remote_user_voice_container).setVisibility(View.GONE);
                 } else {
                     remoteUserView.findViewById(R.id.remote_user_voice_container).setVisibility(View.VISIBLE);
@@ -409,7 +409,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
             public void run() {
                 View remoteView = mRemoteUserContainer.findViewById(Math.abs(uid));
                 remoteView.findViewById(R.id.remote_user_voice_container)
-                        .setVisibility((VideoConfig.CALL_TYPE_VOICE == mCallingType || (VideoConfig.CALL_TYPE_VIDEO == mCallingType && muted)) ? View.VISIBLE : View.GONE);
+                        .setVisibility((VideoCallConfig.CALL_TYPE_VOICE == mCallingType || (VideoCallConfig.CALL_TYPE_VIDEO == mCallingType && muted)) ? View.VISIBLE : View.GONE);
                 remoteView.invalidate();
             }
         });

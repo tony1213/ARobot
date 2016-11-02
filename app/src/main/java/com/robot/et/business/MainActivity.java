@@ -10,8 +10,9 @@ import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
 import com.robot.et.core.software.camera.callback.CameraCallBack;
 import com.robot.et.core.software.camera.impl.local.LocalCameraImpl;
+import com.robot.et.core.software.face.IFace;
+import com.robot.et.core.software.face.IflyFaceFactory;
 import com.robot.et.core.software.face.callback.FaceCallBack;
-import com.robot.et.core.software.face.impl.iflytek.IflyFaceImpl;
 import com.robot.et.core.software.music.callback.MusicCallBack;
 import com.robot.et.core.software.music.config.MusicConfig;
 import com.robot.et.core.software.music.impl.local.LocalMusicPlayImpl;
@@ -28,7 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private XiMaLaYaImpl xima;
     private LocalVideoPlayImpl video;
     private LocalCameraImpl systemCamera;
-    private IflyFaceImpl face;
+    private IFace face;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         xima = new XiMaLaYaImpl(this);
         video = new LocalVideoPlayImpl(this);
         systemCamera = new LocalCameraImpl(this);
-        face = new IflyFaceImpl(this);
+        face = new IflyFaceFactory().createFace(this);
     }
 
     @Override

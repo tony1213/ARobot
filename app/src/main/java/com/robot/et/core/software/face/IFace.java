@@ -12,11 +12,19 @@ import java.util.ArrayList;
 public interface IFace {
     /**
      * 打开人脸识别
+     *
      * @param isVoiceOpen 是否是语音开启
-     * @param infos 人脸信息
-     * @param callBack 结果回调
+     * @param infos       人脸信息
+     * @param callBack    结果回调
      */
     void openFaceDistinguish(boolean isVoiceOpen, ArrayList<FaceInfo> infos, FaceCallBack callBack);
+
+    /**
+     * 是否正在人脸识别
+     *
+     * @return
+     */
+    boolean isFaceDistinguish();
 
     /**
      * 关闭人脸识别

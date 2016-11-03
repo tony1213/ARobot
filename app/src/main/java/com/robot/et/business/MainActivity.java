@@ -157,6 +157,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             }
 
             @Override
+            public void onFacePoint(float facePointX, float facePointY) {
+
+            }
+
+            @Override
             public void onFaceError() {
                 Log.i("faceImpl", "onFaceError()");
             }

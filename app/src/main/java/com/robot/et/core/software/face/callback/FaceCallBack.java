@@ -20,6 +20,13 @@ public interface FaceCallBack {
     void onFaceRegister(boolean isRegisterSuccess, String registerId);
 
     /**
+     * 脸部的位置
+     * @param facePointX 脸部x坐标
+     * @param facePointY 脸部y坐标
+     */
+    void onFacePoint(float facePointX, float facePointY);
+
+    /**
      * 人脸识别异常
      */
     void onFaceError();

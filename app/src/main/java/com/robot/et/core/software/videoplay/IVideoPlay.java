@@ -15,9 +15,24 @@ public interface IVideoPlay {
      */
     void play(String content, VideoPlayCallBack callBack);
 
-    // 停止播放
+    /**
+     * 停止播放
+     */
     void stopPlay();
 
-    // 释放播放器
+    /**
+     * 关闭视频
+     */
+    void closeVideo();
+
+    /**
+     * 是否在播放视频
+     * @return
+     */
+    boolean isPlayVideo();
+
+    /**
+     * 释放播放器
+     */
     void destroyPlayer();
 }

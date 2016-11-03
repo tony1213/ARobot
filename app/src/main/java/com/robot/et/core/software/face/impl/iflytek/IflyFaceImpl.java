@@ -35,6 +35,14 @@ public class IflyFaceImpl implements IFace {
     }
 
     @Override
+    public boolean isFaceDistinguish() {
+        if (IflyFaceDistinguishActivity.instance != null) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void closeFaceDistinguish() {
         if (IflyFaceDistinguishActivity.instance != null) {
             IflyFaceDistinguishActivity.instance.finish();

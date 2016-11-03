@@ -2,7 +2,6 @@ package com.robot.et.core.software.face.impl.iflytek;
 
 import android.Manifest.permission;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
@@ -16,7 +15,6 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.PreviewCallback;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -76,8 +74,6 @@ public class IflyFaceDistinguishActivity extends Activity {
     private String auId;
     private int testCount;//脸部识别的次数
     private int noFaceCount;//没有检测到人脸的次数
-    private int screenCenterX;//屏幕中心X
-    private int screenCenterY;//屏幕中心Y
     private boolean isSendAngle;//发送移动角度
     private boolean isVerify;//是否在验证
     public static IflyFaceDistinguishActivity instance;
@@ -94,8 +90,6 @@ public class IflyFaceDistinguishActivity extends Activity {
         // 设置屏幕常亮
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_face_verify);
-        // 获取屏幕中心点
-        getScreenCenterPoint();
         instance = this;
         // 初始化界面
         initUI();
@@ -110,17 +104,6 @@ public class IflyFaceDistinguishActivity extends Activity {
         faceInfos = intent.getParcelableArrayListExtra("FaceInfo");
         mCallBack = IflyFaceImpl.getCallBack();
 
-    }
-
-    //获取屏幕中心点坐标
-    private void getScreenCenterPoint() {
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics dm = new DisplayMetrics();
-        wm.getDefaultDisplay().getMetrics(dm);
-        screenCenterX = dm.widthPixels / 2;
-        screenCenterY = dm.heightPixels / 2;
-        Log.i(FACE_TAG, "screenCenterX===" + screenCenterX);
-        Log.i(FACE_TAG, "screenCenterY===" + screenCenterY);
     }
 
     // SurfaceView预览监听器
@@ -328,25 +311,19 @@ public class IflyFaceDistinguishActivity extends Activity {
                             mImageData = BitmapUtil.bitmap2Byte(BitmapUtil.decodeToBitMap(tmp, PREVIEW_WIDTH, PREVIEW_HEIGHT, 80));
                             noFaceCount = 0;
                             // 转身  多次检测的时候只转一次头(控制头转)
-//                            if (!isSendAngle) {
-//                                isSendAngle = true;
-//                                FaceRect face = faces[0];
-//                                //X中心点
-//                                float pointX = FaceUtil.getRectCenterX(face);
-//                                Log.i(FACE_TAG, "pointX===" + pointX);
-//                                //Y中心点
-//                                float pointY = FaceUtil.getRectCenterY(face);
-//                                Log.i(FACE_TAG, "pointY===" + pointY);
-//                                /* 横向转头：0-180  正中间 90，  向左转90-0   向右 90-180
-//                                   越靠近90度的，距离正中间的位置越近
-//                                   上下抬头：0-60
-//                                   上下以垂直方向为0度，向前10度即-10，向后10度即+10。
-//                                   左右横向运动以正中为0度，向右10度即-10，向左10度即+10。
-//                                 */
-//                                String directionValue = getTurnDigit(pointY);
-//                                Log.i(FACE_TAG, "directionValue===" + directionValue);
-//                                // 发送控制头部运动的广播
-//                            }
+                            if (!isSendAngle) {
+                                isSendAngle = true;
+                                FaceRect face = faces[0];
+                                //X中心点
+                                float pointX = FaceUtil.getRectCenterX(face);
+                                Log.i(FACE_TAG, "pointX===" + pointX);
+                                //Y中心点
+                                float pointY = FaceUtil.getRectCenterY(face);
+                                Log.i(FACE_TAG, "pointY===" + pointY);
+                                if (mCallBack != null) {
+                                    mCallBack.onFacePoint(pointX, pointY);
+                                }
+                            }
                             // 处理识别到的人脸
                             handleFace(mImageData, faceInfos);
                         }
@@ -358,29 +335,6 @@ public class IflyFaceDistinguishActivity extends Activity {
                 }
             }
         }).start();
-    }
-
-    //获取头部旋转角度
-    private String getTurnDigit(float pointY) {
-        String directionValue = "";
-        float tempValue;
-        String sign = "";
-        if (pointY < screenCenterY) {//向左转
-            Log.i(FACE_TAG, "向左转");
-            sign = "-";
-            tempValue = screenCenterY - pointY;
-        } else {//向右转
-            Log.i(FACE_TAG, "向右转");
-            tempValue = pointY - screenCenterY;
-        }
-        if (tempValue <= 20) {
-            directionValue = sign + 5;
-        } else if (20 < tempValue && tempValue <= 50) {
-            directionValue = sign + 10;
-        } else {
-            directionValue = sign + 15;
-        }
-        return directionValue;
     }
 
     @Override
@@ -572,6 +526,7 @@ public class IflyFaceDistinguishActivity extends Activity {
 
     /**
      * 设置新的脸部数据
+     *
      * @param faceInfos 脸部数据
      */
     private void setNewFaceInfo(List<FaceInfo> faceInfos) {

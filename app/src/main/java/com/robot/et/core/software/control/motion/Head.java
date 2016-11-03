@@ -1,4 +1,4 @@
-package com.robot.et.core.software.controlservice;
+package com.robot.et.core.software.control.motion;
 
 /**
  * Created by houdeming on 2016/11/3.

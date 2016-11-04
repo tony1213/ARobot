@@ -27,7 +27,7 @@ import com.robot.et.core.software.videocall.config.VideoCallConfig;
 import com.robot.et.core.software.videoplay.IVideoPlay;
 import com.robot.et.core.software.videoplay.LocalVideoPlayFactory;
 import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
-import com.robot.et.util.AlarmRemindManager;
+import com.robot.et.core.software.system.alarm.AlarmRemindManager;
 
 import java.io.File;
 

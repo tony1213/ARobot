@@ -70,7 +70,7 @@
         <service android:name=".business.voice.VoiceService" />
         <service android:name=".core.software.music.impl.local.LocalPlayerService" />
 
-        <receiver android:name=".core.software.system.AlarmRemindReceiver" />
+        <receiver android:name=".core.software.system.alarm.AlarmRemindReceiver" />
 
         <!-- ximalaya  begin -->
         <meta-data

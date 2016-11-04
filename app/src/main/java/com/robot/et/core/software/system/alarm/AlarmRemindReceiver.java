@@ -1,4 +1,4 @@
-package com.robot.et.core.software.system;
+package com.robot.et.core.software.system.alarm;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.robot.et.core.software.system.alarm.AlarmClock;
+import com.robot.et.core.software.system.alarm.AlarmRemindManager;
 import com.robot.et.entity.RemindInfo;
-import com.robot.et.util.AlarmRemindManager;
 
 import java.util.ArrayList;
 import java.util.List;

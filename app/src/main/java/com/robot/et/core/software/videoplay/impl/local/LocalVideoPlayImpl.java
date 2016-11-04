@@ -41,7 +41,10 @@ public class LocalVideoPlayImpl implements IVideoPlay {
 
     @Override
     public void closeVideo() {
-        close();
+        if (LocalVideoPlayActivity.instance != null) {
+            LocalVideoPlayActivity.instance.finish();
+            LocalVideoPlayActivity.instance = null;
+        }
     }
 
     @Override
@@ -50,17 +53,5 @@ public class LocalVideoPlayImpl implements IVideoPlay {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void destroyPlayer() {
-        close();
-    }
-
-    private void close() {
-        if (LocalVideoPlayActivity.instance != null) {
-            LocalVideoPlayActivity.instance.finish();
-            LocalVideoPlayActivity.instance = null;
-        }
     }
 }

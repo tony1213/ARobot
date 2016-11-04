@@ -30,9 +30,4 @@ public interface IVideoPlay {
      * @return
      */
     boolean isPlayVideo();
-
-    /**
-     * 释放播放器
-     */
-    void destroyPlayer();
 }

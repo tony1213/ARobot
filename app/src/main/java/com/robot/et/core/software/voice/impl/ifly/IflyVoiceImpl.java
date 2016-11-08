@@ -24,11 +24,11 @@ import com.iflytek.cloud.UnderstanderResult;
 import com.robot.et.core.software.voice.IVoice;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
 import com.robot.et.core.software.voice.callback.ParseResultCallBack;
-import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
 import com.robot.et.core.software.voice.impl.ifly.util.IflyParameter;
 import com.robot.et.core.software.voice.impl.ifly.util.IflyResultParse;
+import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 
 import org.json.JSONObject;
 
@@ -205,6 +205,9 @@ public class IflyVoiceImpl implements IVoice {
         @Override
         public void onVolumeChanged(int volume, byte[] data) {
             Log.i(TAG, "当前正在说话，音量大小： volume==" + volume);
+            if (listenCallBack != null) {
+                listenCallBack.onVolumeChanged(volume);
+            }
         }
 
         @Override

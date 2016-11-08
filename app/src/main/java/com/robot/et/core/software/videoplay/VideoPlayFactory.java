@@ -2,16 +2,20 @@ package com.robot.et.core.software.videoplay;
 
 import android.content.Context;
 
+import com.robot.et.core.software.videoplay.impl.local.LocalVideoPlayImpl;
+
 /**
  * Created by houdeming on 2016/11/2.
- * 视频播放工厂接口
+ * 播放视频的工厂类
  */
-public interface VideoPlayFactory {
+public class VideoPlayFactory {
     /**
-     * 创建视频播放
+     * 创建本地视频播放
      *
      * @param context 上下文
      * @return
      */
-    IVideoPlay createVideoPlay(Context context);
+    public static IVideoPlay produceLocalPlay(Context context) {
+        return new LocalVideoPlayImpl(context);
+    }
 }

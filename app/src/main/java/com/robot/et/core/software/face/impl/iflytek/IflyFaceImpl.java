@@ -26,7 +26,7 @@ public class IflyFaceImpl implements IFace {
     }
 
     @Override
-    public void openFaceDistinguish(boolean isVoiceOpen, ArrayList<FaceInfo> infos, FaceCallBack callBack) {
+    public void openFaceDistinguish(ArrayList<FaceInfo> infos, FaceCallBack callBack) {
         this.callBack = callBack;
         Intent intent = new Intent(context, IflyFaceDistinguishActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

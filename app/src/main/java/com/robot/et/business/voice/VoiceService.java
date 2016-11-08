@@ -7,8 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.core.software.voice.IVoice;
-import com.robot.et.core.software.voice.IflyVoiceFactory;
-import com.robot.et.core.software.voice.TuringVoiceFactory;
+import com.robot.et.core.software.voice.VoiceFactory;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
 import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
@@ -32,8 +31,8 @@ public class VoiceService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        xfVoice = new IflyVoiceFactory().createVoice(this);
-        turingVoice = new TuringVoiceFactory().createVoice(this);
+        xfVoice = VoiceFactory.produceIflyVoice(this);
+        turingVoice = VoiceFactory.produceTuringVoice(this);
 
         listen();
 
@@ -54,6 +53,11 @@ public class VoiceService extends Service {
             @Override
             public void onListenEnd() {
                 Log.i(TAG, "onListenEnd()");
+            }
+
+            @Override
+            public void onVolumeChanged(int volumeValue) {
+                Log.i(TAG, "volumeValue==" + volumeValue);
             }
 
             @Override

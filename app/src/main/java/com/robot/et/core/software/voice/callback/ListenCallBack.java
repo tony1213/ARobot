@@ -9,6 +9,13 @@ public interface ListenCallBack {
 
     // 语音听写结束
     void onListenEnd();
+
+    /**
+     * 获取语音听写时说话音量的变化值
+     * @param volumeValue 音量的变化值
+     */
+    void onVolumeChanged(int volumeValue);
+
     /**
      * 听的结果回调
      *

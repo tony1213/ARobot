@@ -10,24 +10,23 @@ import android.widget.Button;
 import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
 import com.robot.et.business.voice.VoiceService;
+import com.robot.et.core.software.camera.CameraFactory;
 import com.robot.et.core.software.camera.ICamera;
-import com.robot.et.core.software.camera.LocalCameraFactory;
 import com.robot.et.core.software.camera.callback.CameraCallBack;
+import com.robot.et.core.software.face.FaceFactory;
 import com.robot.et.core.software.face.IFace;
-import com.robot.et.core.software.face.IflyFaceFactory;
 import com.robot.et.core.software.face.callback.FaceCallBack;
 import com.robot.et.core.software.music.IMusic;
-import com.robot.et.core.software.music.LocalMusicFactory;
-import com.robot.et.core.software.music.XiMaLaYaFactory;
+import com.robot.et.core.software.music.MusicFactory;
 import com.robot.et.core.software.music.callback.MusicCallBack;
 import com.robot.et.core.software.music.config.MusicConfig;
-import com.robot.et.core.software.videocall.AgoraFactory;
+import com.robot.et.core.software.system.alarm.AlarmRemindManager;
 import com.robot.et.core.software.videocall.IVideoCall;
+import com.robot.et.core.software.videocall.VideoCallFactory;
 import com.robot.et.core.software.videocall.config.VideoCallConfig;
 import com.robot.et.core.software.videoplay.IVideoPlay;
-import com.robot.et.core.software.videoplay.LocalVideoPlayFactory;
+import com.robot.et.core.software.videoplay.VideoPlayFactory;
 import com.robot.et.core.software.videoplay.callback.VideoPlayCallBack;
-import com.robot.et.core.software.system.alarm.AlarmRemindManager;
 
 import java.io.File;
 
@@ -66,12 +65,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         button9.setOnClickListener(this);
         button10.setOnClickListener(this);
 
-        face = new IflyFaceFactory().createFace(this);
-        systemCamera = new LocalCameraFactory().createCamera(this);
-        local = new LocalMusicFactory().createMusic(this);
-        ximalaya = new XiMaLaYaFactory().createMusic(this);
-        videoCall = new AgoraFactory().createVideoCall(this);
-        videoPlay = new LocalVideoPlayFactory().createVideoPlay(this);
+        face = FaceFactory.produceIflyFace(this);
+        systemCamera = CameraFactory.produceLocalCamera(this);
+        local = MusicFactory.produceLocalPlay(this);
+        ximalaya = MusicFactory.produceXiMaLaYaPlay(this);
+        videoCall = VideoCallFactory.produceAgora(this);
+        videoPlay = VideoPlayFactory.produceLocalPlay(this);
     }
 
     @Override
@@ -142,7 +141,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void face() {
-        face.openFaceDistinguish(true, null, new FaceCallBack() {
+        face.openFaceDistinguish(null, new FaceCallBack() {
 
             @Override
             public void onFaceDistinguish(boolean isDistinguishSuccess, String faceName) {

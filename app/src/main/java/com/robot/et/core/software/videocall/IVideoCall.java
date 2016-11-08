@@ -1,5 +1,7 @@
 package com.robot.et.core.software.videocall;
 
+import com.robot.et.core.software.videocall.callback.PhoneCallBack;
+
 /**
  * Created by houdeming on 2016/10/30.
  * 对外拨打电话接口
@@ -9,9 +11,8 @@ public interface IVideoCall {
      *
      * @param callType 呼叫类型
      * @param roomNum 房间号
-     * @param isCallByVoice 是否是语音呼叫
      */
-    void callPhone(int callType, String roomNum, boolean isCallByVoice);
+    void callPhone(int callType, String roomNum, PhoneCallBack callBack);
 
     //  电话是否正在进行
     boolean isPhoneCallIng();

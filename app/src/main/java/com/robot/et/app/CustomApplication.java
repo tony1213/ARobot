@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.robot.et.core.software.videocall.config.VideoCallConfig;
 import com.robot.et.core.software.videocall.impl.agora.BaseEngineEventHandlerActivity;
 import com.robot.et.core.software.videocall.impl.agora.MessageHandler;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
@@ -52,7 +51,10 @@ public class CustomApplication extends Application {
     // 初始化视频（注释：agora视频一定要在这里初始化，否则多次打开视频的时候不能保证拿到对方视频流）
     private void initAgora() {
         messageHandler = new MessageHandler();
-        rtcEngine = RtcEngine.create(getApplicationContext(), VideoCallConfig.AGORA_KEY, messageHandler);
+    }
+
+    public void setRtcEngine(String agoraKey) {
+        rtcEngine = RtcEngine.create(getApplicationContext(), agoraKey, messageHandler);
     }
 
     public RtcEngine getRtcEngine(){

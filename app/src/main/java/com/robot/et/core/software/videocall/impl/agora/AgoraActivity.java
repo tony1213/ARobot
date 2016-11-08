@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.robot.et.R;
 import com.robot.et.app.CustomApplication;
+import com.robot.et.core.software.videocall.callback.PhoneCallBack;
 import com.robot.et.core.software.videocall.config.VideoCallConfig;
 
 import java.util.Random;
@@ -27,15 +28,11 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
     private final String TAG = "video";
     public final static String CALL_TYPE = "call_type";
     public final static String CALL_CHANNEL_ID = "call_channel_id";
-    public final static String CALL_IS_VOICE = "call_is_voice";
     private int mCallingType;
     private String channelId;
-    private boolean isVoiceCall;
     private SurfaceView mLocalView;
     private LinearLayout mRemoteUserContainer;
     private RtcEngine rtcEngine;
-    //判断用户是否接通 默认不接通
-    private static boolean isUserJoined;
     //查看
     private boolean isLook;
     private int mLastRxBytes = 0;
@@ -43,6 +40,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
     private int mLastDuration = 0;
     private LinearLayout localViewContainer;
     public static AgoraActivity instance;
+    private PhoneCallBack mCallBack;
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -54,10 +52,10 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         Intent mIntent = getIntent();
         mCallingType = mIntent.getIntExtra(CALL_TYPE, 0);
         channelId = mIntent.getStringExtra(CALL_CHANNEL_ID);
-        isVoiceCall = mIntent.getBooleanExtra(CALL_IS_VOICE, false);
         Log.i(TAG, " mCallingType===" + mCallingType);
         Log.i(TAG, " channelId===" + channelId);
-        Log.i(TAG, " isVoiceCall===" + isVoiceCall);
+        mCallBack = AgoraVideoImpl.getCallBack();
+
         // 初始化声网的RtcEngine对象
         setupRtcEngine();
 
@@ -78,31 +76,15 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
                 break;
         }
 
-        isUserJoined = false;
-        // 主动呼叫时
-        if (isVoiceCall) {
-            //播放打电话提示音（只在主动呼叫时播放）
-            //15秒如果用户没有接通的话，自动挂断电话
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (!isUserJoined) {
-                        closeChannel();
-                        // 通知APP关掉通话
-                        finish();
-                    }
-                }
-            }, 15 * 1000);
+        if (mCallBack != null) {
+            mCallBack.onPhoneConnectIng();
         }
-
     }
 
     //退出当前通话
-    public void closeChannel() {
+    private void closeChannel() {
         setRemoteUserViewVisibility(false);
         leaveChannel();
-        isUserJoined = true;
         finish();
     }
 
@@ -113,6 +95,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
 
     // 初始化声网的RtcEngine对象
     private void setupRtcEngine() {
+        CustomApplication.getInstance().setRtcEngine(VideoCallConfig.AGORA_KEY);
         rtcEngine = CustomApplication.getInstance().getRtcEngine();
         CustomApplication.getInstance().setEngineEventHandlerActivity(this);
         rtcEngine.enableVideo();
@@ -240,7 +223,6 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         Log.i(TAG, "onDestroy()");
         super.onDestroy();
         instance = null;
-        isUserJoined = true;
     }
 
     //自己离开通话频道
@@ -290,7 +272,7 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
 
                 // ensure remote video view setup
                 final SurfaceView remoteView = RtcEngine.CreateRendererView(getApplicationContext());
-                remoteVideoUser.addView(remoteView,new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+                remoteVideoUser.addView(remoteView, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
                 remoteView.setZOrderOnTop(true);
                 remoteView.setZOrderMediaOverlay(true);
 
@@ -331,14 +313,14 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // 防止声音提示还有，停止掉
+                if (mCallBack != null) {
+                    mCallBack.onPhoneConnect();
+                }
 
                 View singleRemoteUser = mRemoteUserContainer.findViewById(Math.abs(uid));
                 if (singleRemoteUser != null) {
                     return;
                 }
-
-                isUserJoined = true;
 
                 LayoutInflater layoutInflater = getLayoutInflater();
                 singleRemoteUser = layoutInflater.inflate(R.layout.viewlet_remote_user, null);
@@ -376,6 +358,9 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
                 //当前没人视频或者通话
                 if (mRemoteUserContainer.getChildCount() == 0) {
                     closeChannel();
+                    if (mCallBack != null) {
+                        mCallBack.onPhoneDisconnect();
+                    }
                 }
             }
         });
@@ -427,10 +412,16 @@ public class AgoraActivity extends BaseEngineEventHandlerActivity {
         if (!isLook) {
             if (err == 101) {
                 // 抱歉，声网key异常
-                finish();
+                closeChannel();
+                if (mCallBack != null) {
+                    mCallBack.onPhoneError("抱歉，声网异常");
+                }
             } else if (err == 104) {
                 // 抱歉，网络异常
-                finish();
+                closeChannel();
+                if (mCallBack != null) {
+                    mCallBack.onPhoneError("抱歉，网络异常");
+                }
             }
         }
     }

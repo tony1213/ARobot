@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.robot.et.core.software.videocall.IVideoCall;
+import com.robot.et.core.software.videocall.callback.PhoneCallBack;
 
 /**
  * Created by houdeming on 2016/10/29.
@@ -12,18 +13,23 @@ import com.robot.et.core.software.videocall.IVideoCall;
 public class AgoraVideoImpl implements IVideoCall {
 
     private Context context;
+    private static PhoneCallBack callBack;
 
     public AgoraVideoImpl(Context context) {
         this.context = context;
     }
 
+    protected static PhoneCallBack getCallBack() {
+        return callBack;
+    }
+
     @Override
-    public void callPhone(int callType, String roomNum, boolean isCallByVoice) {
+    public void callPhone(int callType, String roomNum, PhoneCallBack callBack) {
+        this.callBack = callBack;
         Intent intent = new Intent(context, AgoraActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(AgoraActivity.CALL_TYPE, callType);
         intent.putExtra(AgoraActivity.CALL_CHANNEL_ID, roomNum);
-        intent.putExtra(AgoraActivity.CALL_IS_VOICE, isCallByVoice);
         context.startActivity(intent);
     }
 
@@ -38,7 +44,7 @@ public class AgoraVideoImpl implements IVideoCall {
     @Override
     public void closePhone() {
         if (AgoraActivity.instance != null) {
-            AgoraActivity.instance.closeChannel();
+            AgoraActivity.instance.finish();
             AgoraActivity.instance = null;
         }
     }

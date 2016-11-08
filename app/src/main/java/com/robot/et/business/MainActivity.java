@@ -23,6 +23,7 @@ import com.robot.et.core.software.music.config.MusicConfig;
 import com.robot.et.core.software.system.alarm.AlarmRemindManager;
 import com.robot.et.core.software.videocall.IVideoCall;
 import com.robot.et.core.software.videocall.VideoCallFactory;
+import com.robot.et.core.software.videocall.callback.PhoneCallBack;
 import com.robot.et.core.software.videocall.config.VideoCallConfig;
 import com.robot.et.core.software.videoplay.IVideoPlay;
 import com.robot.et.core.software.videoplay.VideoPlayFactory;
@@ -131,13 +132,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 face();
                 break;
             case R.id.button9:
-                videoCall.callPhone(VideoCallConfig.CALL_TYPE_VIDEO, "123", true);
+                callPone();
                 break;
             case R.id.button10:
                 intent = new Intent(this, VoiceService.class);
                 startService(intent);
                 break;
         }
+    }
+
+    private void callPone() {
+        videoCall.callPhone(VideoCallConfig.CALL_TYPE_VIDEO, "123", new PhoneCallBack() {
+            @Override
+            public void onPhoneConnectIng() {
+                Log.i("videoPhone", "onPhoneConnectIng()");
+            }
+
+            @Override
+            public void onPhoneConnect() {
+                Log.i("videoPhone", "onPhoneConnect()");
+            }
+
+            @Override
+            public void onPhoneDisconnect() {
+                Log.i("videoPhone", "onPhoneDisconnect()");
+            }
+
+            @Override
+            public void onPhoneError(String errorMsg) {
+                Log.i("videoPhone", "onPhoneError errorMsg==" + errorMsg);
+            }
+        });
     }
 
     private void face() {

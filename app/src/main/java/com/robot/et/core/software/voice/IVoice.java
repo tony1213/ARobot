@@ -6,6 +6,7 @@ import com.robot.et.core.software.voice.callback.UnderstandCallBack;
 
 /**
  * Created by houdeming on 2016/10/29.
+ * 对外语音接口
  */
 public interface IVoice {
     /**开始语音合成

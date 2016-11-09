@@ -47,4 +47,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile project(':android_common')
     compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.squareup.okio:okio:1.8.0'
 }

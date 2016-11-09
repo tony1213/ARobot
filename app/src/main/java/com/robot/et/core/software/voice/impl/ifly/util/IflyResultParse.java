@@ -21,6 +21,7 @@ import java.util.Random;
  * 科大讯飞结果json解析
  */
 public class IflyResultParse {
+
     private static final String TAG = "json";
 
     // 科大讯飞语音听写的结果json解析

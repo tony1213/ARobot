@@ -17,7 +17,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".app.CustomApplication"
@@ -26,7 +31,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".test.MainActivity">
+        <activity android:name="com.robot.et.test.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,15 +42,66 @@
         <activity android:name=".test.fresco.FrescoActivity" />
         <activity android:name=".test.picasso.PicassoActivity" />
         <activity android:name=".base.BaseActivity" />
-        <activity android:name=".business.MainActivity"></activity>
+        <activity android:name=".test.other.OtherActivity" />
 
         <activity
-            android:name=".core.software.video.impl.agora.AgoraActivity"
+            android:name=".core.software.videocall.impl.agora.AgoraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
-        <service android:name=".business.voice.VoiceService" />
+        <activity
+            android:name=".core.software.videoplay.impl.local.LocalVideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+
+        <activity
+            android:name=".core.software.camera.impl.local.TakePhotoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+
+        <activity
+            android:name=".core.software.face.impl.iflytek.IflyFaceDistinguishActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+
+
+        <service android:name=".test.other.VoiceServiceTest" />
+        <service android:name=".core.software.music.impl.local.LocalPlayerService" />
+
+        <receiver android:name=".core.software.system.alarm.AlarmRemindReceiver" />
+
+        <!-- ximalaya  begin -->
+        <meta-data
+            android:name="app_key"
+            android:value="3be9bd072d195e5deff619ab4a48601a" />
+
+        <meta-data
+            android:name="pack_id"
+            android:value="com.robot.et" />
+
+        <service android:name="com.ximalaya.ting.android.opensdk.player.service.XmPlayerService" />
+
+        <receiver
+            android:name="com.ximalaya.ting.android.opensdk.player.receive.PlayerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.ximalaya.ting.android.ACTION_CONTROL_START_PAUSE" />
+                <action android:name="com.ximalaya.ting.android.ACTION_CONTROL_PLAY_PRE" />
+                <action android:name="com.ximalaya.ting.android.ACTION_CONTROL_PLAY_NEXT" />
+                <action android:name="com.ximalaya.ting.android.ACTION_CLOSE" />
+                <action android:name="com.ximalaya.ting.android.ACTION_CONTROL_RELEASE_SERVICE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.ximalaya.ting.android.opensdk.player.receive.WireControlReceiver"
+            android:exported="true"></receiver>
+        <!-- ximalaya  end -->
+
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.robot.et.business.voice;
+package com.robot.et.test.other;
 
 import android.app.Service;
 import android.content.Intent;
@@ -18,8 +18,8 @@ import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
  * Created by houdeming on 2016/10/26.
  * 语音业务
  */
-public class VoiceService extends Service {
-    private final String TAG = "VoiceService";
+public class VoiceServiceTest extends Service {
+    private final String TAG = "VoiceTest";
     private IVoice xfVoice;
     private IVoice turingVoice;
 

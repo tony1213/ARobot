@@ -31,7 +31,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.robot.et.business.MainActivity">
+        <activity android:name="com.robot.et.test.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,6 +42,7 @@
         <activity android:name=".test.fresco.FrescoActivity" />
         <activity android:name=".test.picasso.PicassoActivity" />
         <activity android:name=".base.BaseActivity" />
+        <activity android:name=".test.other.OtherActivity" />
 
         <activity
             android:name=".core.software.videocall.impl.agora.AgoraActivity"
@@ -67,7 +68,8 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
-        <service android:name=".business.voice.VoiceService" />
+
+        <service android:name=".test.other.VoiceServiceTest" />
         <service android:name=".core.software.music.impl.local.LocalPlayerService" />
 
         <receiver android:name=".core.software.system.alarm.AlarmRemindReceiver" />

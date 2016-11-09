@@ -1,11 +1,11 @@
 package com.robot.et.base;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
 import android.os.Bundle;
 
 import com.robot.et.lib.core.picasso.ImageLoader;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

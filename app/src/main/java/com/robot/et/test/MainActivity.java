@@ -10,6 +10,7 @@ import com.robot.et.lib.business.entity.User;
 import com.robot.et.lib.core.http.HttpTaskHelper;
 import com.robot.et.test.fresco.FrescoActivity;
 import com.robot.et.test.jni.JNIActivity;
+import com.robot.et.test.other.OtherActivity;
 import com.robot.et.test.picasso.PicassoActivity;
 
 import butterknife.ButterKnife;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_test);
         ButterKnife.bind(this);
 
     }
@@ -118,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
     public void testPicasso(){
         Intent intent = new Intent();
         intent.setClass(this, PicassoActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.button8)
+    public void testOther(){
+        Intent intent = new Intent();
+        intent.setClass(this, OtherActivity.class);
         startActivity(intent);
     }
 }

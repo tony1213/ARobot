@@ -28,6 +28,7 @@ import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
 import com.robot.et.core.software.voice.impl.ifly.util.IflyParameter;
 import com.robot.et.core.software.voice.impl.ifly.util.IflyResultParse;
+import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
 import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 
 import org.json.JSONObject;
@@ -376,7 +377,7 @@ public class IflyVoiceImpl implements IVoice {
 
 
     @Override
-    public void startSpeak(String speakContent, String speakMen, SpeakCallBack callBack) {
+    public void startSpeak(String speakContent, SpeakCallBack callBack) {
         this.speakCallBack = callBack;
         if (mTts == null || TextUtils.isEmpty(speakContent)) {
             if (speakCallBack != null) {
@@ -385,7 +386,7 @@ public class IflyVoiceImpl implements IVoice {
             return;
         }
         // 语音合成参数设置
-        IflyParameter.setTextToVoiceParam(context, mTts, speakMen, "60", "50", "100");
+        IflyParameter.setTextToVoiceParam(context, mTts, SpeakConfig.defaultSpeakMen, "60", "50", "100");
         // 调用sdk提供的语音合成方法
         int code = mTts.startSpeaking(speakContent, mTtsListener);
         // * 只保存音频不进行播放接口,调用此接口请注释startSpeaking接口
@@ -407,7 +408,7 @@ public class IflyVoiceImpl implements IVoice {
     }
 
     @Override
-    public void startListen(String listenMen, ListenCallBack callBack) {
+    public void startListen(ListenCallBack callBack) {
         this.listenCallBack = callBack;
         if (mIat == null) {
             if (listenCallBack != null) {
@@ -418,7 +419,7 @@ public class IflyVoiceImpl implements IVoice {
         // 每次听之前要把上一次听的结果清除掉
         mIatResults.clear();
         // 语音听写参数设置
-        IflyParameter.setVoiceToTextParam(mIat, listenMen);
+        IflyParameter.setVoiceToTextParam(mIat, SpeakConfig.defaultListenMen);
         // 调用sdk提供的语音听写方法
         int ret = mIat.startListening(mRecognizerListener);
         // 语音听写返回的值

@@ -12,20 +12,18 @@ public interface IVoice {
     /**开始语音合成
      *
      * @param speakContent 要说的话
-     * @param speakMen 发音人
      * @param callBack 说话结果的回调
      */
-    void startSpeak(String speakContent, String speakMen, SpeakCallBack callBack);
+    void startSpeak(String speakContent, SpeakCallBack callBack);
 
     // 停止语音合成
     void stopSpeak();
 
     /**开始语音听写
      *
-     * @param listenMen 听的人
      * @param callBack 听写结果的回调
      */
-    void startListen(String listenMen, ListenCallBack callBack);
+    void startListen(ListenCallBack callBack);
 
     // 停止语音听写
     void stopListen();

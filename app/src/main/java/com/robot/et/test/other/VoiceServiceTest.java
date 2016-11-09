@@ -11,7 +11,6 @@ import com.robot.et.core.software.voice.VoiceFactory;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
 import com.robot.et.core.software.voice.callback.SpeakCallBack;
 import com.robot.et.core.software.voice.callback.UnderstandCallBack;
-import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
 import com.robot.et.core.software.voice.voiceenum.SceneServiceEnum;
 
 /**
@@ -44,7 +43,7 @@ public class VoiceServiceTest extends Service {
     }
 
     private void listen() {
-        xfVoice.startListen(SpeakConfig.SPEAK_CLOUD_NANNAN, new ListenCallBack() {
+        xfVoice.startListen(new ListenCallBack() {
             @Override
             public void onListenBegin() {
                 Log.i(TAG, "onListenBegin()");
@@ -155,7 +154,7 @@ public class VoiceServiceTest extends Service {
     }
 
     private void speak(String content) {
-        xfVoice.startSpeak(content, SpeakConfig.SPEAK_CLOUD_NANNAN, new SpeakCallBack() {
+        xfVoice.startSpeak(content, new SpeakCallBack() {
             @Override
             public void onSpeakBegin() {
                 Log.i(TAG, "onSpeakBegin()");

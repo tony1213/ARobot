@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.robot.et.app.CustomApplication;
 import com.robot.et.entity.FaceInfo;
+import com.robot.et.entity.FamilyLocationInfo;
 import com.robot.et.entity.LearnAnswerInfo;
 import com.robot.et.entity.LearnQuestionInfo;
 import com.robot.et.entity.RemindInfo;
@@ -387,6 +388,57 @@ public class RobotDB {
         String sql = "delete from scriptAction where scriptId=?";
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(sql, new String[]{String.valueOf(scriptId)});
+        db.close();
+    }
+
+    /**
+     * 增加家庭位置
+     * @param info 家庭位置信息
+     */
+    public void addFamilyLocation(FamilyLocationInfo info) {
+        String sql = "insert into familyLocation(robotNum,positionName,positionX,positionY,spareContent,spareContent2,spareContent3,spareType) values(?,?,?,?,?,?,?,?)";
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(sql, new String[]{info.getRobotNum(), info.getPositionName(), info.getPositionX(),
+                info.getPositionY(),info.getSpareContent(), info.getSpareContent2(),info.getSpareContent3(), String.valueOf(info.getSpareType())});
+        db.close();
+    }
+
+    /**
+     * 根据位置获取信息
+     * @param positionName 位置
+     * @return
+     */
+    public FamilyLocationInfo getFamilyLocationInfo(String positionName) {
+        String sql = "select * from familyLocation where positionName=?";
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor c = db.rawQuery(sql, new String[]{positionName});
+        FamilyLocationInfo info = null;
+        if (c.moveToNext()) {
+            info = new FamilyLocationInfo();
+            info.setRobotNum(c.getString(c.getColumnIndex("robotNum")));
+            info.setPositionName(c.getString(c.getColumnIndex("positionName")));
+            info.setPositionX(c.getString(c.getColumnIndex("positionX")));
+            info.setPositionY(c.getString(c.getColumnIndex("positionY")));
+            info.setSpareContent(c.getString(c.getColumnIndex("spareContent")));
+            info.setSpareContent2(c.getString(c.getColumnIndex("spareContent2")));
+            info.setSpareContent3(c.getString(c.getColumnIndex("spareContent3")));
+            info.setSpareType(c.getInt(c.getColumnIndex("spareType")));
+        }
+        c.close();
+        db.close();
+        return info;
+    }
+
+    /**
+     * 更新位置坐标
+     * @param positionName 位置
+     * @param positionX x坐标
+     * @param positionY y坐标
+     */
+    public void updateFamilyLocationXY(String positionName, String positionX, String positionY) {
+        String sql = "update familyLocation set positionX=?,positionY=? where positionName=?";
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(sql, new String[]{positionX, positionY, positionName});
         db.close();
     }
 }

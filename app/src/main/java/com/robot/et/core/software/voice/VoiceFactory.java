@@ -10,13 +10,20 @@ import com.robot.et.core.software.voice.impl.turing.TuringVoiceImpl;
  * 语音工厂类
  */
 public class VoiceFactory {
+
+    private static IflyVoiceImpl iflyVoice;
+    private static TuringVoiceImpl turingVoice;
+
     /**
      * 创建科大讯飞的语音
      * @param context 上下文
      * @return
      */
     public static IVoice produceIflyVoice(Context context) {
-        return new IflyVoiceImpl(context);
+        if (iflyVoice == null) {
+            iflyVoice = new IflyVoiceImpl(context);
+        }
+        return iflyVoice;
     }
 
     /**
@@ -25,6 +32,9 @@ public class VoiceFactory {
      * @return
      */
     public static IVoice produceTuringVoice(Context context) {
-        return new TuringVoiceImpl(context);
+        if (turingVoice == null) {
+            turingVoice = new TuringVoiceImpl(context);
+        }
+        return turingVoice;
     }
 }

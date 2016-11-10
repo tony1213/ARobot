@@ -112,6 +112,20 @@ public class VoiceHandler {
     }
 
     /**
+     * 停止说
+     */
+    public static void stopSpeak() {
+        iflyVoice.stopSpeak();
+    }
+
+    /**
+     * 停止听
+     */
+    public static void stopListen() {
+        iflyVoice.stopListen();
+    }
+
+    /**
      * 处理语音结果
      * @param result 语音内容
      */

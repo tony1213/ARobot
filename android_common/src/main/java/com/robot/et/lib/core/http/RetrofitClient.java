@@ -16,8 +16,10 @@ public enum RetrofitClient {
                 //设置OKHttpClient
                 .client(OKHttpFactory.INSTANCE.getOkHttpClient())
 
-                //baseUrl
-                .baseUrl("https://api.github.com/")
+                //baseUrl:https://api.github.com/
+                //test:http://192.168.1.28:8080/robot-app/
+                //cloud:http://139.196.171.217:8080/robot-app/
+                .baseUrl("http://139.196.171.217:8080/robot-app/")
 
                 //string转化器
 //                .addConverterFactory(StringConverter.create())

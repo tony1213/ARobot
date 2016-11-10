@@ -2,6 +2,7 @@ package com.robot.et.lib.core.http;
 
 import android.content.Context;
 
+import com.robot.et.lib.business.api.BusinessAPI;
 import com.robot.et.lib.business.api.GitHubAPI;
 
 /**
@@ -17,6 +18,7 @@ public enum  HttpTaskHelper {
 
     HttpTaskHelper() {
     }
+
 
     public static GitHubAPI gitHubAPI(Context context) {
         mContext = context;

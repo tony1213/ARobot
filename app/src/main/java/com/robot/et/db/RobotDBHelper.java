@@ -60,12 +60,20 @@ public class RobotDBHelper extends SQLiteOpenHelper {
                 "spareContent3 varchar(500),spareType integer" +
                 ")";
 
+        //家庭位置信息表
+        String familyLocation = "create table familyLocation"+
+                "("+
+                "id integer primary key autoincrement,robotNum varchar(30),positionName varchar(50),positionX varchar(30),positionY varchar(30)," +
+                "spareContent varchar(500),spareContent2 varchar(500),spareContent3 varchar(500),spareType integer" +
+                ")";
+
         db.execSQL(faces);
         db.execSQL(question);
         db.execSQL(answer);
         db.execSQL(reminds);
         db.execSQL(script);
         db.execSQL(scriptAction);
+        db.execSQL(familyLocation);
     }
 
     @Override

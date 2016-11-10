@@ -103,7 +103,7 @@ public class TuringVoiceImpl implements IVoice {
     };
 
     @Override
-    public void startSpeak(String speakContent, String speakMen, SpeakCallBack callBack) {
+    public void startSpeak(String speakContent, SpeakCallBack callBack) {
 
     }
 
@@ -113,7 +113,7 @@ public class TuringVoiceImpl implements IVoice {
     }
 
     @Override
-    public void startListen(String listenMen, ListenCallBack callBack) {
+    public void startListen(ListenCallBack callBack) {
 
     }
 

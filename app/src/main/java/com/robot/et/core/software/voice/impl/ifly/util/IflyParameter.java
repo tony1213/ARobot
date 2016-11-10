@@ -27,7 +27,7 @@ public class IflyParameter {
     public static void setTextToVoiceParam(Context context, SpeechSynthesizer mTts, String speakMen, String speed, String pitch, String volume) {
         // 清空参数
         mTts.setParameter(SpeechConstant.PARAMS, null);
-        if (TextUtils.equals(speakMen, SpeakConfig.SPEAK_LOCAL)) {// 本地
+        if (TextUtils.equals(speakMen, SpeakConfig.MEN_SPEAK_LOCAL_XIAOYAN)) {// 本地
             //设置使用本地引擎
             mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_LOCAL);
             //设置发音人资源路径

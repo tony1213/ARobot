@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 
 import com.robot.et.app.CustomApplication;
+import com.robot.et.core.software.slam.SlamtecLoader;
 import com.slamtec.slamware.SlamwareCorePlatform;
 
 /**
@@ -12,13 +13,14 @@ import com.slamtec.slamware.SlamwareCorePlatform;
 
 public class BaseFragment extends Fragment {
 
-    private CustomApplication application;
     public SlamwareCorePlatform slamwareCorePlatform;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        application = (CustomApplication)getActivity().getApplication();
-        slamwareCorePlatform = application.getSlamwareCorePlatform();
+        initSlam();
+    }
+    private void initSlam(){
+        slamwareCorePlatform = SlamtecLoader.getInstance().execConnect();
     }
 }

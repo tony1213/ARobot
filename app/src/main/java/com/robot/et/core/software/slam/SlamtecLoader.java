@@ -71,9 +71,9 @@ public class SlamtecLoader {
     //slamtec 控制转向
     public void execBasicRotate(int degree){
         Preconditions.checkNotNull(slamwareCorePlatform);
-        slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) degree),0,0));
+        slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) -50),0,0));
     }
-    
+
     //TODO slamtec 控制转向的扩展，比如，添加方向参数，参加圈数参数。
 
     //slamtec获取当前机器人的坐标

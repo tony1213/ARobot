@@ -1,5 +1,6 @@
 package com.robot.et.business;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
+import com.robot.et.business.service.HardWareService;
 import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.view.callback.ViewCallBack;
 import com.robot.et.business.voice.VoiceHandler;
@@ -31,6 +33,9 @@ public class MainActivity extends BaseActivity implements ViewCallBack {
         initView();
         // 设置view的接口回调
         ViewManager.setViewCallBack(this);
+        VoiceHandler.init();
+        // 初始化service
+        initService();
     }
 
     /**
@@ -48,15 +53,24 @@ public class MainActivity extends BaseActivity implements ViewCallBack {
         showEmotionL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VoiceHandler.listen();
+//                VoiceHandler.listen();
             }
         });
+    }
+
+    private void initService() {
+        startService(new Intent(this, HardWareService.class));
+    }
+
+    private void stopService() {
+        stopService(new Intent(this, HardWareService.class));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         VoiceHandler.destroyVoice();
+        stopService();
     }
 
     private void initLinearLayout() {

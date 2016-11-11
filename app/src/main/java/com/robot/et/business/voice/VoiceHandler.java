@@ -1,12 +1,15 @@
 package com.robot.et.business.voice;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.R;
 import com.robot.et.app.CustomApplication;
 import com.robot.et.business.control.MatchScene;
+import com.robot.et.business.control.MoveOrder;
 import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
@@ -29,11 +32,19 @@ public class VoiceHandler {
     private static IVoice turingVoice;
     private static SpeakEndCallBack mSpeakEndCallBack;
     private static ListenResultCallBack mListenResultCallBack;
+    private static final int VIEW_IMG = 1;
 
     static {
         context = CustomApplication.getInstance().getApplicationContext();
         iflyVoice = VoiceFactory.produceIflyVoice(context);
         turingVoice = VoiceFactory.produceTuringVoice(context);
+    }
+
+    /**
+     * 主要是防止唤醒子线程中调用，不做任何处理
+     */
+    public static void init() {
+
     }
 
     /**
@@ -61,7 +72,7 @@ public class VoiceHandler {
     public static void listen(ListenResultCallBack callBack) {
         mListenResultCallBack = callBack;
         // 显示表情
-        ViewManager.getViewCallBack().onShowEmotion(false, R.mipmap.emotion_normal);
+        handler.sendEmptyMessage(VIEW_IMG);
         iflyVoice.startListen(listenCallBack);
     }
 
@@ -161,9 +172,24 @@ public class VoiceHandler {
             if (MatchScene.isMatchScene(context, result)) {
                 return;
             }
+            if (MoveOrder.isControlMove(result)) {
+                return;
+            }
             understanderResult(result);
         }
     }
+
+    private static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case VIEW_IMG:// 显示表情
+                    ViewManager.getViewCallBack().onShowEmotion(false, R.mipmap.emotion_normal);
+                    break;
+            }
+        }
+    };
 
     /**
      * 文本理解结果

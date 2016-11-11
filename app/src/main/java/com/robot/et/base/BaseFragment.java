@@ -1,4 +1,4 @@
-package com.robot.et.core.software.slam.base;
+package com.robot.et.base;
 
 import android.app.Fragment;
 import android.os.Bundle;

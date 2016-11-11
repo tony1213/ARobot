@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.robot.et.R;
-import com.robot.et.core.software.slam.base.BaseFragment;
+import com.robot.et.base.BaseFragment;
 import com.robot.et.core.software.slam.view.ScaleImageView;
 import com.slamtec.slamware.robot.Map;
 import com.slamtec.slamware.robot.MapKind;

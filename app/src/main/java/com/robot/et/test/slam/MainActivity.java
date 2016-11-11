@@ -14,15 +14,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.robot.et.R;
-import com.robot.et.core.software.slam.base.BaseActivity;
+import com.robot.et.base.BaseActivity;
+import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.slam.fragment.MapFragment;
-import com.slamtec.slamware.action.MoveDirection;
 import com.slamtec.slamware.robot.LaserPoint;
 import com.slamtec.slamware.robot.LaserScan;
 import com.slamtec.slamware.robot.Location;
 import com.slamtec.slamware.robot.Pose;
 import com.slamtec.slamware.robot.Rotation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import butterknife.BindView;
@@ -32,8 +34,7 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
 
-    @BindView(R.id.forward)
-    Button forward;
+    @BindView(R.id.forward) Button forward;
     @BindView(R.id.backward) Button backward;
     @BindView(R.id.left) Button left;
     @BindView(R.id.right) Button right;
@@ -41,12 +42,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.test) Button test;
     @BindView(R.id.execTurn) Button execTurn;
     @BindView(R.id.moveGoal) Button moveGoal;
-    @BindView(R.id.battery)
-    TextView battery;
+    @BindView(R.id.battery) TextView battery;
     @BindView(R.id.quality) TextView quality;
     @BindView(R.id.charing) TextView charing;
-    @BindView(R.id.angle)
-    EditText angle;
+    @BindView(R.id.angle) EditText angle;
     @BindView(R.id.goalx) EditText goalX;
     @BindView(R.id.goaly) EditText goalY;
 
@@ -60,7 +59,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//横屏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_slam);
         ButterKnife.bind(this);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         MapFragment fragment = new MapFragment();
@@ -131,28 +130,59 @@ public class MainActivity extends BaseActivity {
         String dataX = goalX.getText().toString().trim();
         String dataY = goalY.getText().toString().trim();
         if (TextUtils.equals("",dataX) || TextUtils.equals("",dataY)){
-            return;
+            Location location1 = new Location();
+            location1.setX(1.0F);
+            location1.setY(0.0F);
+            location1.setZ(0.0F);
+
+            Location location2 = new Location();
+            location2.setX(1.0f);
+            location2.setY(1.0f);
+            location2.setZ(0.0f);
+
+            Location location3 = new Location();
+            location3.setX(0.0f);
+            location3.setY(1.0f);
+            location3.setZ(0.0f);
+
+            Location location4 = new Location();
+            location4.setX(0.0f);
+            location4.setY(0.0f);
+            location4.setZ(0.0f);
+
+            List<Location> goals = new ArrayList<>();
+            goals.add(location1);
+            goals.add(location2);
+            goals.add(location3);
+            goals.add(location4);
+
+            slamwareCorePlatform.moveTo(goals,false,true);
+        }else {
+            Location location = new Location();
+            location.setX(Float.valueOf(dataX));
+            location.setY(Float.valueOf(dataY));
+            location.setZ(0.0f);
+            slamwareCorePlatform.moveTo(location);
         }
-        Location location = new Location();
-        location.setX(Float.valueOf(dataX));
-        location.setY(Float.valueOf(dataY));
-        location.setZ(0.0f);
-        slamwareCorePlatform.moveTo(location);
     }
     @OnClick({R.id.forward,R.id.backward,R.id.left,R.id.right})
     public void execForward(View view){
         switch (view.getId()) {
             case R.id.forward:
-                slamwareCorePlatform.moveBy(MoveDirection.FORWARD);
+                SlamtecLoader.getInstance().execBasicMove(1);
+//                slamwareCorePlatform.moveBy(MoveDirection.FORWARD);
                 break;
             case R.id.backward:
-                slamwareCorePlatform.moveBy(MoveDirection.BACKWARD);
+                SlamtecLoader.getInstance().execBasicMove(2);
+//                slamwareCorePlatform.moveBy(MoveDirection.BACKWARD);
                 break;
             case R.id.left:
-                slamwareCorePlatform.moveBy(MoveDirection.TURN_LEFT);
+                SlamtecLoader.getInstance().execBasicMove(3);
+//                slamwareCorePlatform.moveBy(MoveDirection.TURN_LEFT);
                 break;
             case R.id.right:
-                slamwareCorePlatform.moveBy(MoveDirection.TURN_RIGHT);
+                SlamtecLoader.getInstance().execBasicMove(4);
+//                slamwareCorePlatform.moveBy(MoveDirection.TURN_RIGHT);
                 break;
             default:
                 break;

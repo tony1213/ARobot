@@ -7,6 +7,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.robot.et.core.software.videocall.impl.agora.BaseEngineEventHandlerActivity;
 import com.robot.et.core.software.videocall.impl.agora.MessageHandler;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
+import com.slamtec.slamware.SlamwareCorePlatform;
 
 import io.agora.rtc.RtcEngine;
 
@@ -17,6 +18,9 @@ public class CustomApplication extends Application {
     private static CustomApplication instance;
     private RtcEngine rtcEngine;
     private MessageHandler messageHandler;
+
+    private static final String ROBOT_IP = "192.168.11.1";//slamtec 底盘的IP地址
+    private static final int PORT = 1445;//slamtec 访问底盘的端口号
 
     public static CustomApplication getInstance() {
         return instance;
@@ -63,5 +67,10 @@ public class CustomApplication extends Application {
 
     public void setEngineEventHandlerActivity(BaseEngineEventHandlerActivity engineEventHandlerActivity){
         messageHandler.setActivity(engineEventHandlerActivity);
+    }
+
+    //声明Slamtec的主入口
+    public SlamwareCorePlatform getSlamwareCorePlatform(){
+        return SlamwareCorePlatform.connect(ROBOT_IP,PORT);
     }
 }

@@ -76,6 +76,8 @@
         <service android:name=".test.other.VoiceServiceTest" />
         <service android:name=".core.software.music.impl.local.LocalPlayerService" />
 
+        <service android:name=".business.service.HardWareService"/>
+
         <receiver android:name=".core.software.system.alarm.AlarmRemindReceiver" />
 
         <!-- ximalaya  begin -->

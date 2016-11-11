@@ -4,8 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.robot.et.R;
 import com.robot.et.app.CustomApplication;
 import com.robot.et.business.control.MatchScene;
+import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
 import com.robot.et.core.software.voice.IVoice;
@@ -58,6 +60,8 @@ public class VoiceHandler {
      */
     public static void listen(ListenResultCallBack callBack) {
         mListenResultCallBack = callBack;
+        // 显示表情
+        ViewManager.getViewCallBack().onShowEmotion(false, R.mipmap.emotion_normal);
         iflyVoice.startListen(listenCallBack);
     }
 
@@ -108,6 +112,8 @@ public class VoiceHandler {
                 if (result.length() == 1) {
                     listen();
                 } else {
+                    // 显示文字
+                    ViewManager.getViewCallBack().onShowText(result);
                     if (mListenResultCallBack != null) {
                         mListenResultCallBack.onListenResult(result);
                     }

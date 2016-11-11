@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.business.control.orderenum.MoveEnum;
+import com.robot.et.util.Utilities;
 
 import java.util.Random;
 
@@ -23,14 +24,25 @@ public class MoveOrder {
      */
     public static boolean isControlMove(String result) {
         if (!TextUtils.isEmpty(result)) {
-            // 如果字数大于6个字数时，作为胡乱听得不处理
-            if (result.length() > 6) {
-                return false;
-            }
             int moveKey = getMoveKey(result);
             Log.i(TAG, "moveKey===" + moveKey);
             if (moveKey != 0) {
-
+                String content = getRandomAnswer();
+                int digit = Utilities.chineseNum2Int(result);
+                if (moveKey == MoveEnum.LEFT.getMoveKey() || moveKey == MoveEnum.RIGHT.getMoveKey()) {
+                    // 左转右转
+                    if (digit == 0) {
+                        digit = 90;// 默认90度
+                    }
+                } else if (moveKey == MoveEnum.TURN_AFTER.getMoveKey()) {// 向后转
+                    digit = 180;
+                } else {// 前进
+                    if (digit == 0) {
+                        digit = 1 * 1000;// 默认1米
+                    } else {
+                        digit *= 1000;// 单位是mm
+                    }
+                }
                 return true;
             }
         }

@@ -21,15 +21,15 @@ public class MatchStringUtil {
     // 声音最小
     public static String voiceLittestRegex = "^" + baseRegex + "*((声音)|(音量))+" + baseRegex + "*((最小)|(最低))+" + baseRegex + "*$";
 
-    //学习的问题与答案
+    // 学习的问题与答案
     public static String questionAndAnswerRegex = "^" + baseRegex + "*我+" + baseRegex + "*((问)|(说))+" + baseRegex + "*你+" + baseRegex + "+((说)|(回答))+" + baseRegex + "+$";
-    //免打扰开
+    // 免打扰开
     public static String disturbOpenRegex = "^" + baseRegex + "*(((免打扰)+" + baseRegex + "*开+)|(开+" + baseRegex + "*(免打扰)+))" + baseRegex + "*$";
-    //免打扰关
+    // 免打扰关
     public static String disturbCloseRegex = "^" + baseRegex + "*(((免打扰)+" + baseRegex + "*关+)|(关+" + baseRegex + "*(免打扰)+))" + baseRegex + "*$";
-    //闭嘴
+    // 闭嘴
     public static String shutUpRegex = "^" + baseRegex + "*((嘴+" + baseRegex + "*闭+)|(闭+" + baseRegex + "*嘴+)|((休息)|(睡觉)|(静音)|(别说话)+))" + baseRegex + "*$";
-    //做动作
+    // 做动作
     public static String doActionRegex = "^" + baseRegex + "*我+" + baseRegex + "*((问)|(说))+" + baseRegex + "*你+" + baseRegex + "+(萌|(卖个萌))+" + baseRegex + "*$";
     // 抬左手
     public static String raiseLeftHandRegex = "^" + baseRegex + "*(抬|举)+" + baseRegex + "*(左手)+" + baseRegex + "*$";
@@ -59,11 +59,9 @@ public class MatchStringUtil {
     // 认识物体
     public static String visionLearnRegex = "^" + baseRegex + "*这+" + baseRegex + "*是+" + baseRegex + "+$";
     // 去哪里
-    public static String goWhereRegex = "^" + baseRegex + "*去+" + baseRegex + "+$";
-    //忘记学习内容
+    public static String goWhereRegex = "^" + baseRegex + "*((((导航))+" + baseRegex + "*(到|去)+)|(去)+)" + baseRegex + "+$";
+    // 忘记学习内容
     public static String forgetLearnRegex = "^" + baseRegex + "*(忘|删)+" + baseRegex + "*(学习)+" + baseRegex + "*$";
-    //导航到
-    public static String navigationRegex = "^" + baseRegex + "*(导航)+" + baseRegex + "*(到|去)+" + baseRegex + "+$";
 
     // 打开运动
     public static String openMotionRegex = "^" + baseRegex + "*开+" + baseRegex + "*(运动)+" + baseRegex + "*$";
@@ -81,6 +79,8 @@ public class MatchStringUtil {
     public static String openSecuritySignRegex = "^" + baseRegex + "*((进入)|(打开)|(开启))+" + baseRegex + "*((安保)|(巡防))+" + baseRegex + "*$";
     // 解除安保场景的标志
     public static String closeSecuritySignRegex = "^" + baseRegex + "*((解除)|(退出)|(关闭))+" + baseRegex + "*((安保)|(巡防))+" + baseRegex + "*$";
+    // 确认安保场景的标志
+    public static String confirmSecuritySignRegex = "^" + baseRegex + "*((安保)|(巡防))+" + baseRegex + "*$";
 
     // 漫游的标志
     public static String roamSignRegex = "^" + baseRegex + "*(((漫游)+)|(((自己)|随)+" + baseRegex + "*走+))" + baseRegex + "*$";
@@ -195,34 +195,15 @@ public class MatchStringUtil {
     }
 
     /**
-     * 获取环境学习的答案
+     * 获取位置
      * @param str string字符串
      * @return
      */
-    public static String getEnvironmentLearnAnswer(String str) {
+    public static String getLocationName(String str) {
         String content = "";
         if (!TextUtils.isEmpty(str)) {
             if (str.contains("是")) {
                 int start = str.indexOf("是");
-                content = str.substring(start + 1, str.length());
-            }
-        }
-        return content;
-    }
-
-    /**
-     * 导航到
-     * @param str string字符串
-     * @return
-     */
-    public static String getNavigationArea(String str) {
-        String content = "";
-        if (!TextUtils.isEmpty(str)) {
-            if (str.contains("到")) {
-                int start = str.indexOf("到");
-                content = str.substring(start + 1, str.length());
-            } else if (str.contains("去")) {
-                int start = str.indexOf("去");
                 content = str.substring(start + 1, str.length());
             }
         }
@@ -237,13 +218,16 @@ public class MatchStringUtil {
     public static String getGoWhereAnswer(String str) {
         String content = "";
         if (!TextUtils.isEmpty(str)) {
-            if (str.contains("去")) {
-                if (str.contains("哪") || str.contains("那")) {
-                    content = "";
-                } else {
-                    int start = str.indexOf("去");
-                    content = str.substring(start + 1, str.length());
+            if (str.contains("哪") || str.contains("那")) {
+                content = "";
+            } else {
+                int start = 0;
+                if (str.contains("去")) {
+                    start = str.indexOf("去");
+                } else if (str.contains("到")) {
+                    start = str.indexOf("到");
                 }
+                content = str.substring(start + 1, str.length());
             }
         }
         return content;

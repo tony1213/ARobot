@@ -173,12 +173,6 @@ public enum MatchSceneEnum {
             return MatchStringUtil.matchString(str, MatchStringUtil.forgetLearnRegex);
         }
     },
-    NAVIGATION_SCENE {// 导航到
-
-        public boolean isScene(String str) {
-            return MatchStringUtil.matchString(str, MatchStringUtil.navigationRegex);
-        }
-    },
     ROAM_SCENE {// 漫游
 
         public boolean isScene(String str) {
@@ -225,6 +219,12 @@ public enum MatchSceneEnum {
 
         public boolean isScene(String str) {
             return MatchStringUtil.matchString(str, MatchStringUtil.closeSecuritySignRegex);
+        }
+    },
+    CONFIRM_SECURITY_SCENE {// 确认安保场景的标志
+
+        public boolean isScene(String str) {
+            return MatchStringUtil.matchString(str, MatchStringUtil.confirmSecuritySignRegex);
         }
     };
 

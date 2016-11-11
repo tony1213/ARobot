@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import com.robot.et.R;
 import com.robot.et.base.BaseActivity;
 import com.robot.et.business.voice.VoiceHandler;
-import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.core.software.widget.CustomTextView;
 
 public class MainActivity extends BaseActivity {
@@ -39,12 +38,7 @@ public class MainActivity extends BaseActivity {
         showEmotion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VoiceHandler.listen(new ListenResultCallBack() {
-                    @Override
-                    public void onListenResult(String result) {
-                        VoiceHandler.handleResult(result);
-                    }
-                });
+                VoiceHandler.listen();
             }
         });
     }

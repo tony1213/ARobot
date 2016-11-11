@@ -6,7 +6,13 @@ import android.util.Log;
 
 import com.robot.et.business.control.orderenum.MatchSceneEnum;
 import com.robot.et.business.voice.VoiceHandler;
+import com.robot.et.business.voice.callback.ListenResultCallBack;
+import com.robot.et.business.voice.callback.SpeakEndCallBack;
+import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.software.system.volume.VolumeControlManager;
+import com.robot.et.db.RobotDB;
+import com.robot.et.entity.FamilyLocationInfo;
+import com.robot.et.util.MatchStringUtil;
 
 /**
  * Created by houdeming on 2016/9/9.
@@ -53,7 +59,7 @@ public class MatchScene {
                 VoiceHandler.speakEndToListen("音量增加");
 
                 break;
-            case VOICE_LITTER_INDIRECT_SCENE://间接降低声音
+            case VOICE_LITTER_INDIRECT_SCENE:// 间接降低声音
                 flag = true;
                 VolumeControlManager.reduceVolume();
                 VoiceHandler.speakEndToListen("音量减小");
@@ -65,7 +71,7 @@ public class MatchScene {
                 VoiceHandler.speakEndToListen("音量增加");
 
                 break;
-            case VOICE_LITTER_SCENE://直接降低声音
+            case VOICE_LITTER_SCENE:// 直接降低声音
                 flag = true;
                 VolumeControlManager.reduceVolume();
                 VoiceHandler.speakEndToListen("音量减小");
@@ -129,21 +135,47 @@ public class MatchScene {
 
                 break;
             case OPEN_SECURITY_SCENE:// 进入安保场景
+                flag = true;
+                enterSecurity();
 
                 break;
-            case CLOSE_SECURITY_SCENE:// 解除安保场景
+            case CLOSE_SECURITY_SCENE:// 退出安保场景
+                flag = true;
+                outSecurity();
+
+                break;
+            case CONFIRM_SECURITY_SCENE:// 确认安保场景的标志
+                flag = true;
+                if (GlobalConfig.isSecurityMode) {// 已经在安保模式
+                    security("已经在安保模式了，要退出来吗？", true);
+                } else {// 不在安保模式
+                    security("要进入安保模式吗？", false);
+                }
 
                 break;
             case PHOTOGRAPH_SCENE:// 拍照
 
                 break;
             case ENVIRONMENT_LEARN_SCENE:// 环境认识学习
+                String locationName = MatchStringUtil.getLocationName(result);
+                Log.i(TAG, "locationName===" + locationName);
+                if (!TextUtils.isEmpty(locationName)) {
+                    flag = true;
+                    VoiceHandler.speakEndToListen("好的，我记住了");
+                }
 
                 break;
             case VISION_LEARN_SCENE:// 视觉学习
 
                 break;
             case GO_WHERE_SCENE:// 去哪里的指令
+                String areaName = MatchStringUtil.getGoWhereAnswer(result);
+                Log.i(TAG, "areaName===" + areaName);
+                if (!TextUtils.isEmpty(areaName)) {
+                    flag = true;
+                    VoiceHandler.speakEndToListen("好的");
+                    FamilyLocationInfo info = RobotDB.getInstance().getFamilyLocationInfo(areaName);
+                }
 
                 break;
             case OPEN_MOTION_SCENE:// 打开运动
@@ -159,9 +191,8 @@ public class MatchScene {
 
                 break;
             case FOLLOW_SCENE:// 跟着我
-
-                break;
-            case NAVIGATION_SCENE:// 导航到
+                flag = true;
+                follow();
 
                 break;
         }
@@ -182,5 +213,60 @@ public class MatchScene {
             }
         }
         return null;
+    }
+
+    /**
+     * 安保
+     * @param content 要说的内容
+     * @param isSecurityMode 是否是安保模式
+     */
+    private static void security(String content, final boolean isSecurityMode) {
+        VoiceHandler.speak(content, new SpeakEndCallBack() {
+            @Override
+            public void onSpeakEnd() {
+                VoiceHandler.listen(new ListenResultCallBack() {
+                    @Override
+                    public void onListenResult(String result) {
+                        if (result.contains("好的")) {
+                            if (isSecurityMode) {
+                                outSecurity();
+                            } else {
+                                enterSecurity();
+                            }
+                        } else {
+                            if (isSecurityMode) {
+                                security("请回答“好的”退出安保模式", isSecurityMode);
+                            } else {
+                                security("请回答“好的”进入安保模式", isSecurityMode);
+                            }
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+
+    /**
+     * 进入安保场景
+     */
+    private static void enterSecurity() {
+        GlobalConfig.isSecurityMode = true;
+        VoiceHandler.speakEndToListen("好的，已进入安保模式");
+    }
+
+    /**
+     * 退出安保场景
+     */
+    private static void outSecurity() {
+        GlobalConfig.isSecurityMode = false;
+        VoiceHandler.speakEndToListen("好的，已退出安保模式");
+    }
+
+    /**
+     * 跟随
+     */
+    private static void follow() {
+        VoiceHandler.speakEndToListen("好的");
     }
 }

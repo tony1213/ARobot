@@ -7,6 +7,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.robot.et.core.software.videocall.impl.agora.BaseEngineEventHandlerActivity;
 import com.robot.et.core.software.videocall.impl.agora.MessageHandler;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
+import com.slamtec.slamware.SlamwareCorePlatform;
 
 import io.agora.rtc.RtcEngine;
 

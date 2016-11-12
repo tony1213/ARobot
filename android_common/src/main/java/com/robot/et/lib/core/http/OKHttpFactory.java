@@ -39,15 +39,15 @@ enum OKHttpFactory {
 
 
         okHttpClient = new OkHttpClient.Builder()
-                //打印请求log
+                //http请求log
                 .addInterceptor(httpLoggingInterceptor)
                 //修改Request请求信息
-                .addInterceptor(new GzipRequestInterceptor())
+//                .addInterceptor(new GzipRequestInterceptor())
                 //修改Response请求头Cache-Control
                 .addInterceptor(new ModifyResponseInterceptor())
                 //cookie
                 .cookieJar(cookie)
-                //cache
+                //cache缓存策略
                 .cache(cache)
                 //失败重连
                 .retryOnConnectionFailure(true)

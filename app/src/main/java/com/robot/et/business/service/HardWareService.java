@@ -11,6 +11,7 @@ import com.robot.et.R;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.core.hardware.wakeup.IWakeUp;
 import com.robot.et.core.hardware.wakeup.WakeUpHandler;
+import com.robot.et.core.software.slam.SlamtecLoader;
 
 import java.util.Random;
 
@@ -44,6 +45,7 @@ public class HardWareService extends Service implements IWakeUp {
     @Override
     public void getVoiceWakeUpDegree(int degree) {
         Log.i(TAG, "degree===" + degree);
+        SlamtecLoader.getInstance().execBasicRotate(degree);
         awakenNeedStop();
         VoiceHandler.speakEndToListen(getAwakenContent());
     }

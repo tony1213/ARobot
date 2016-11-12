@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_init"
+                android:text="init"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_uinit"
+                android:text="uinit"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_learn"
+                android:text="learn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_callback"
+                android:text="callback"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_bodyPos"
+                android:text="bodyPos"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_recog"
+                android:text="recog"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

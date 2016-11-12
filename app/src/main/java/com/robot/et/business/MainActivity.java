@@ -19,8 +19,8 @@ import com.robot.et.core.software.widget.CustomTextView;
 
 public class MainActivity extends BaseActivity implements ViewCallBack {
 
-    private LinearLayout showTextL,showEmotionL,showImgL;
-    private ImageView imgEmotion,imageBitmap,imagePhoto;
+    private LinearLayout showTextL, showEmotionL, showImgL;
+    private ImageView imgEmotion, imageBitmap, imagePhoto;
     private CustomTextView tvText;
 
     @Override

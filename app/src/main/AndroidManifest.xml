@@ -72,6 +72,10 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
+        <activity
+            android:name=".test.vision.VisionActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".test.other.VoiceServiceTest" />
         <service android:name=".core.software.music.impl.local.LocalPlayerService" />

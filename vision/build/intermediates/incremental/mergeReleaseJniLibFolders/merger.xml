@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="E:\git\ARobot\vision\libs"><file name="armeabi/libroVisionCore.so" path="E:\git\ARobot\vision\libs\armeabi\libroVisionCore.so"/><file name="armeabi-v7a/libroVisionCore.so" path="E:\git\ARobot\vision\libs\armeabi-v7a\libroVisionCore.so"/></source></dataSet><dataSet config="release"><source path="E:\git\ARobot\vision\src\release\jniLibs"/></dataSet></merger>

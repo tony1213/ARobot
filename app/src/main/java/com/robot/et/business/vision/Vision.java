@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.robot.et.VisionManager;
 import com.robot.et.business.vision.callback.BodyPositionCallBack;
+import com.robot.et.business.vision.callback.LearnOpenCallBack;
 import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.vision.callback.VisionLearnCallBack;
 import com.robot.et.business.vision.callback.VisionRecogniseCallBack;
@@ -23,6 +24,7 @@ public class Vision implements VisionCallBack {
     private VisionLearnCallBack learnCallBack;
     private VisionRecogniseCallBack recogniseCallBack;
     private BodyPositionCallBack positionCallBack;
+    private LearnOpenCallBack learnOpenCallBack;
 
     private Vision() {
         visionManager = new VisionManager(this);
@@ -45,12 +47,12 @@ public class Vision implements VisionCallBack {
     public void initVision(VisionInitCallBack callBack) {
         try {
             int visionId = visionManager.visionInit();
-            Log.i(TAG,"visionId==" + visionId);
+            Log.i(TAG, "visionId==" + visionId);
             if (callBack != null) {
-                callBack.onVisionInitResult(visionId == 0 ? true:false);
+                callBack.onVisionInitResult(visionId == 0 ? true : false);
             }
         } catch (RemoteException e) {
-            Log.i(TAG,"initVision() RemoteException");
+            Log.i(TAG, "initVision() RemoteException");
         }
     }
 
@@ -61,18 +63,19 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.visionUninit();
         } catch (RemoteException e) {
-            Log.i(TAG,"unInitVision() RemoteException");
+            Log.i(TAG, "unInitVision() RemoteException");
         }
     }
 
     /**
      * 打开学习
      */
-    public void openLearn() {
+    public void openLearn(LearnOpenCallBack callBack) {
+        learnOpenCallBack = callBack;
         try {
             visionManager.visionLearnOpen();
         } catch (RemoteException e) {
-            Log.i(TAG,"openLearn() RemoteException");
+            Log.i(TAG, "openLearn() RemoteException");
         }
     }
 
@@ -83,12 +86,13 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.visionLearnClose();
         } catch (RemoteException e) {
-            Log.i(TAG,"closeLearn() RemoteException");
+            Log.i(TAG, "closeLearn() RemoteException");
         }
     }
 
     /**
      * 开始学习
+     *
      * @param content
      */
     public void startLearn(String content, VisionLearnCallBack callBack) {
@@ -96,7 +100,7 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.objLearnStartLearn(content);
         } catch (RemoteException e) {
-            Log.i(TAG,"startLearn() RemoteException");
+            Log.i(TAG, "startLearn() RemoteException");
         }
     }
 
@@ -108,7 +112,7 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.objLearnStartRecog();
         } catch (RemoteException e) {
-            Log.i(TAG,"startRecognise() RemoteException");
+            Log.i(TAG, "startRecognise() RemoteException");
         }
     }
 
@@ -119,7 +123,7 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.bodyDetectOpen();
         } catch (RemoteException e) {
-            Log.i(TAG,"openBodyDetect() RemoteException");
+            Log.i(TAG, "openBodyDetect() RemoteException");
         }
     }
 
@@ -130,7 +134,7 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.bodyDetectClose();
         } catch (RemoteException e) {
-            Log.i(TAG,"closeBodyDetect() RemoteException");
+            Log.i(TAG, "closeBodyDetect() RemoteException");
         }
     }
 
@@ -142,18 +146,21 @@ public class Vision implements VisionCallBack {
         try {
             visionManager.bodyDetectGetPos();
         } catch (RemoteException e) {
-            Log.i(TAG,"getBodyPosition() RemoteException");
+            Log.i(TAG, "getBodyPosition() RemoteException");
         }
     }
 
     @Override
     public void learnOpenEnd() {
-        Log.i(TAG,"learnOpenEnd()");
+        Log.i(TAG, "learnOpenEnd()");
+        if (learnOpenCallBack != null) {
+            learnOpenCallBack.onLearnOpenEnd();
+        }
     }
 
     @Override
     public void learnWaring(int id) {
-        Log.i(TAG,"learnWaring() id==" + id);
+        Log.i(TAG, "learnWaring() id==" + id);
         String content = "";
         switch (id) {
             case -1:
@@ -187,14 +194,14 @@ public class Vision implements VisionCallBack {
                 content = "东西太小了，看不清";
                 break;
         }
-        if (learnCallBack != null) {
-            learnCallBack.onLearnWaring(content);
+        if (learnOpenCallBack != null) {
+            learnOpenCallBack.onLearnWaring(id, content);
         }
     }
 
     @Override
     public void learnEnd() {
-        Log.i(TAG,"learnEnd()");
+        Log.i(TAG, "learnEnd()");
         if (learnCallBack != null) {
             learnCallBack.onLearnEnd();
         }
@@ -202,7 +209,7 @@ public class Vision implements VisionCallBack {
 
     @Override
     public void learnRecogniseEnd(String name, int conf) {
-        Log.i(TAG,"learnRecogniseEnd() name==" + name + "---conf==" + conf);
+        Log.i(TAG, "learnRecogniseEnd() name==" + name + "---conf==" + conf);
         if (recogniseCallBack != null) {
             recogniseCallBack.onVisionRecogniseResult(name, conf);
         }
@@ -210,7 +217,7 @@ public class Vision implements VisionCallBack {
 
     @Override
     public void bodyPosition(float centerX, float centerY, float centerZ) {
-        Log.i(TAG,"learnOpenEnd() centerX==" + centerX + "--centerY==" + centerY + "--centerZ==" + centerZ);
+        Log.i(TAG, "learnOpenEnd() centerX==" + centerX + "--centerY==" + centerY + "--centerZ==" + centerZ);
         if (positionCallBack != null) {
             positionCallBack.onBodyPosition(centerX, centerY, centerZ);
         }

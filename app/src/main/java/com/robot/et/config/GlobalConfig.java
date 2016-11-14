@@ -10,4 +10,8 @@ public class GlobalConfig {
     public static boolean isSecurityMode = false;
     // 运动开关是否开启
     public static boolean isMoveOpen = false;
+    // 是否是跟随
+    public static boolean isFollow = false;
+    // 是否显示表情
+    public static boolean isShowEmotion = false;
 }

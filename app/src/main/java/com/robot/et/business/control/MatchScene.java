@@ -26,8 +26,9 @@ public class MatchScene {
 
     /**
      * 匹配场景
+     *
      * @param context Android上下文
-     * @param result 匹配的內容
+     * @param result  匹配的內容
      * @return
      */
     public static boolean isMatchScene(Context context, String result) {
@@ -174,9 +175,11 @@ public class MatchScene {
                 String areaName = MatchStringUtil.getGoWhereAnswer(result);
                 Log.i(TAG, "areaName===" + areaName);
                 if (!TextUtils.isEmpty(areaName)) {
-                    flag = true;
-                    VoiceHandler.speakEndToListen("好的");
-                    FamilyLocationInfo info = RobotDB.getInstance().getFamilyLocationInfo(areaName);
+                    if (areaName.length() < 8) {
+                        flag = true;
+                        VoiceHandler.speakEndToListen("好的");
+                        goToLocation(areaName);
+                    }
                 }
 
                 break;
@@ -203,6 +206,7 @@ public class MatchScene {
 
     /**
      * 获取场景的enum
+     *
      * @param str
      * @return
      */
@@ -219,7 +223,8 @@ public class MatchScene {
 
     /**
      * 安保
-     * @param content 要说的内容
+     *
+     * @param content        要说的内容
      * @param isSecurityMode 是否是安保模式
      */
     private static void security(String content, final boolean isSecurityMode) {
@@ -270,10 +275,12 @@ public class MatchScene {
      */
     private static void follow() {
         VoiceHandler.speakEndToListen("好的");
+        FollowBody.getInstance().follow();
     }
 
     /**
      * 记住环境位置
+     *
      * @param locationName 位置
      */
     private static void rememberLocation(String locationName) {
@@ -294,5 +301,24 @@ public class MatchScene {
             mDb.addFamilyLocation(mInfo);
         }
         VoiceHandler.speakEndToListen("好的，我记住了");
+    }
+
+    /**
+     * 去哪里
+     * @param locationName
+     */
+    private static void goToLocation(String locationName) {
+        FamilyLocationInfo info = RobotDB.getInstance().getFamilyLocationInfo(locationName);
+        if (info != null) {
+            String posX = info.getPositionX();
+            String posY = info.getPositionY();
+            if (!TextUtils.isEmpty(posX) && !TextUtils.isEmpty(posY)) {
+                SlamtecLoader.getInstance().execSetGoal(Float.parseFloat(posX), Float.parseFloat(posY));
+            } else {
+                VoiceHandler.speakEndToListen("位置不明确，请先指定位置");
+            }
+        } else {
+            VoiceHandler.speakEndToListen("位置不明确，请先指定位置");
+        }
     }
 }

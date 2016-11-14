@@ -7,17 +7,6 @@ package com.robot.et.business.vision.callback;
 
 public interface VisionLearnCallBack {
     /**
-     * 学习打开
-     */
-    void onLearnOpenEnd();
-
-    /**
-     * 学习中的警告
-     * @param content
-     */
-    void onLearnWaring(String content);
-
-    /**
      * 学习结束
      */
     void onLearnEnd();

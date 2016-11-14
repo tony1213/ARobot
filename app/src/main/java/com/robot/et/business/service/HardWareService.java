@@ -8,6 +8,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.robot.et.R;
+import com.robot.et.business.control.FollowBody;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.core.hardware.wakeup.IWakeUp;
 import com.robot.et.core.hardware.wakeup.WakeUpHandler;
@@ -80,10 +81,12 @@ public class HardWareService extends Service implements IWakeUp {
         VoiceHandler.stopSpeak();
         // 停止听
         VoiceHandler.stopListen();
+        FollowBody.getInstance().stopFollow();
     }
 
     /**
      * 获取唤醒时要说的内容
+     *
      * @return
      */
     private String getAwakenContent() {

@@ -42,6 +42,11 @@ public class MoveOrder {
                 } else {// 前进
                     if (digit == 0) {
                         digit = 1 * 1000;// 默认1米
+//                        SlamtecLoader.getInstance().execBasicMove(1);
+//                            float currentRobotX = SlamtecLoader.getInstance().getCurrentRobotPose().getX();
+//                            float currentRobotY = SlamtecLoader.getInstance().getCurrentRobotPose().getY();
+//                            SlamtecLoader.getInstance().execSetGoal(currentRobotX+digit,currentRobotY);
+                        SlamtecLoader.getInstance().execSetGoal(1,0);
                     } else {
                         digit *= 1000;// 单位是mm
                     }

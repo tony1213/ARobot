@@ -16,6 +16,7 @@ import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.view.callback.ViewCallBack;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.core.software.widget.CustomTextView;
+import com.robot.et.test.vision.VisionActivity;
 
 public class MainActivity extends BaseActivity implements ViewCallBack {
 
@@ -35,7 +36,7 @@ public class MainActivity extends BaseActivity implements ViewCallBack {
         ViewManager.setViewCallBack(this);
         VoiceHandler.init();
         // 初始化service
-        initService();
+//        initService();
     }
 
     /**
@@ -54,6 +55,8 @@ public class MainActivity extends BaseActivity implements ViewCallBack {
             @Override
             public void onClick(View v) {
 //                VoiceHandler.listen();
+                Intent intent = new Intent(MainActivity.this, VisionActivity.class);
+                startActivity(intent);
             }
         });
     }

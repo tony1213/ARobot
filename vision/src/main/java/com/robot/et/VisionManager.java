@@ -31,6 +31,16 @@ public class VisionManager extends IRobotVision.Stub {
     }
 
     @Override
+    public void visionLearnOpen() throws RemoteException {
+        RobotVision.objLearnOpen();
+    }
+
+    @Override
+    public void visionLearnClose() throws RemoteException {
+        RobotVision.objLearnClose();
+    }
+
+    @Override
     public void objLearnStartLearn(String str) throws RemoteException {
         RobotVision.objLearnStartLearn(str);
     }
@@ -43,6 +53,16 @@ public class VisionManager extends IRobotVision.Stub {
     @Override
     public void testCallback() throws RemoteException {
         RobotVision.testCallback();
+    }
+
+    @Override
+    public void bodyDetectOpen() throws RemoteException {
+        RobotVision.bodyDetectOpen();
+    }
+
+    @Override
+    public void bodyDetectClose() throws RemoteException {
+        RobotVision.bodyDetectClose();
     }
 
     @Override

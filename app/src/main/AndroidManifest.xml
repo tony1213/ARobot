@@ -47,6 +47,7 @@
         <activity android:name=".test.picasso.PicassoActivity" />
         <activity android:name=".base.BaseActivity" />
         <activity android:name=".test.other.OtherActivity" />
+        <activity android:name=".test.slam.MainActivity"/>
 
         <activity
             android:name=".core.software.videocall.impl.agora.AgoraActivity"

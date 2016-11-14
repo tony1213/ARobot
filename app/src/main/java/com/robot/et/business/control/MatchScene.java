@@ -9,10 +9,12 @@ import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
 import com.robot.et.config.GlobalConfig;
+import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.system.volume.VolumeControlManager;
 import com.robot.et.db.RobotDB;
 import com.robot.et.entity.FamilyLocationInfo;
 import com.robot.et.util.MatchStringUtil;
+import com.slamtec.slamware.robot.Location;
 
 /**
  * Created by houdeming on 2016/9/9.
@@ -161,7 +163,7 @@ public class MatchScene {
                 Log.i(TAG, "locationName===" + locationName);
                 if (!TextUtils.isEmpty(locationName)) {
                     flag = true;
-                    VoiceHandler.speakEndToListen("好的，我记住了");
+                    rememberLocation(locationName);
                 }
 
                 break;
@@ -268,5 +270,29 @@ public class MatchScene {
      */
     private static void follow() {
         VoiceHandler.speakEndToListen("好的");
+    }
+
+    /**
+     * 记住环境位置
+     * @param locationName 位置
+     */
+    private static void rememberLocation(String locationName) {
+        RobotDB mDb = RobotDB.getInstance();
+        Location location = SlamtecLoader.getInstance().getCurrentRobotPose();
+        String posX = String.valueOf(location.getX());
+        String posY = String.valueOf(location.getY());
+        FamilyLocationInfo info = mDb.getFamilyLocationInfo(locationName);
+        if (info != null) {// 该位置已经记录，更新位置
+            Log.i(TAG, "更新位置");
+            mDb.updateFamilyLocationXY(locationName, posX, posY);
+        } else {// 第一次记录该位置
+            Log.i(TAG, "添加位置");
+            FamilyLocationInfo mInfo = new FamilyLocationInfo();
+            mInfo.setPositionName(locationName);
+            mInfo.setPositionX(posX);
+            mInfo.setPositionY(posY);
+            mDb.addFamilyLocation(mInfo);
+        }
+        VoiceHandler.speakEndToListen("好的，我记住了");
     }
 }

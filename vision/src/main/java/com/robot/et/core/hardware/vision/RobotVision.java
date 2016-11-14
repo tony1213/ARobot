@@ -55,21 +55,23 @@ public class RobotVision {
 		public float centerZ;
 	}
 
-	/**
-	 * 视觉初始化
-	 */
 	public static native int visionInit();
 	
-	/**
-	 * 视觉反初始化
-	 */
 	public static native void visionUninit();
+
+	public static native void objLearnOpen();
+
+	public static native void objLearnClose();
 
 	public static native void objLearnStartLearn(String str);
 
 	public static native void objLearnStartRecog();
 
 	public static native void testCallback();
+
+	public static native void bodyDetectOpen();
+
+	public static native void bodyDetectClose();
 
 	public static native void bodyDetectGetPos(Postion3Df pos);
 }

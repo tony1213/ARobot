@@ -34,12 +34,20 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
         Button call = (Button) findViewById(R.id.btn_callback);
         Button pos = (Button) findViewById(R.id.btn_bodyPos);
         Button recog = (Button) findViewById(R.id.btn_recog);
+        Button learnOpen = (Button) findViewById(R.id.btn_learn_open);
+        Button learnClose = (Button) findViewById(R.id.btn_learn_close);
+        Button posOpen = (Button) findViewById(R.id.btn_bodyPos_open);
+        Button posClose = (Button) findViewById(R.id.btn_bodyPos_close);
         init.setOnClickListener(this);
         uInit.setOnClickListener(this);
         learn.setOnClickListener(this);
         call.setOnClickListener(this);
         pos.setOnClickListener(this);
         recog.setOnClickListener(this);
+        learnOpen.setOnClickListener(this);
+        learnClose.setOnClickListener(this);
+        posOpen.setOnClickListener(this);
+        posClose.setOnClickListener(this);
 
         visionManager = new VisionManager(this);
 
@@ -65,6 +73,22 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
                 }
 
                 break;
+            case R.id.btn_learn_open:
+                try {
+                    Log.i(TAG,"visionLearnOpen");
+                    visionManager.visionLearnOpen();
+                } catch (RemoteException e) {
+                    Log.i(TAG,"Learn RemoteException");
+                }
+                break;
+            case R.id.btn_learn_close:
+                try {
+                    Log.i(TAG,"visionLearnClose");
+                    visionManager.visionLearnClose();
+                } catch (RemoteException e) {
+                    Log.i(TAG,"Learn RemoteException");
+                }
+                break;
             case R.id.btn_learn:
                 try {
                     Log.i(TAG,"Learn");
@@ -80,6 +104,22 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
                     visionManager.testCallback();
                 } catch (RemoteException e) {
                     Log.i(TAG,"Callback RemoteException");
+                }
+                break;
+            case R.id.btn_bodyPos_open:
+                try {
+                    Log.i(TAG,"bodyDetectOpen");
+                    visionManager.bodyDetectOpen();
+                } catch (RemoteException e) {
+                    Log.i(TAG,"bodyDetectGetPos RemoteException");
+                }
+                break;
+            case R.id.btn_bodyPos_close:
+                try {
+                    Log.i(TAG,"bodyDetectClose");
+                    visionManager.bodyDetectClose();
+                } catch (RemoteException e) {
+                    Log.i(TAG,"bodyDetectGetPos RemoteException");
                 }
                 break;
             case R.id.btn_bodyPos:

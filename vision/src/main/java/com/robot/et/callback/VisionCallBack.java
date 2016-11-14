@@ -27,7 +27,7 @@ public interface VisionCallBack {
      * 学习识别结束
      *
      * @param name 物体名字
-     * @param conf 物体的识别度
+     * @param conf 识别的确信度
      */
     void learnRecogniseEnd(String name, int conf);
 

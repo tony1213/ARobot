@@ -25,6 +25,18 @@
                 android:layout_height="45dp"
                 />
             <Button
+                android:id="@+id/btn_learn_open"
+                android:text="learnOpen"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_learn_close"
+                android:text="learnClose"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
                 android:id="@+id/btn_learn"
                 android:text="learn"
                 android:layout_width="match_parent"
@@ -33,6 +45,18 @@
             <Button
                 android:id="@+id/btn_callback"
                 android:text="callback"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_bodyPos_open"
+                android:text="bodyPosOpen"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+            <Button
+                android:id="@+id/btn_bodyPos_close"
+                android:text="bodyPosClose"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 />

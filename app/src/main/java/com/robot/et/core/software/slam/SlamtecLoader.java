@@ -1,11 +1,9 @@
 package com.robot.et.core.software.slam;
 
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.facebook.common.internal.Preconditions;
 import com.slamtec.slamware.SlamwareCorePlatform;
-import com.slamtec.slamware.action.IMoveAction;
 import com.slamtec.slamware.action.MoveDirection;
 import com.slamtec.slamware.robot.Location;
 import com.slamtec.slamware.robot.Pose;
@@ -72,31 +70,36 @@ public class SlamtecLoader {
         switch (direction){
             case MOVEDIRECTION_FORWARD:
                 slamwareCorePlatform.moveBy(MoveDirection.FORWARD);
+                break;
             case MOVEDIRECTION_BACKWARD:
                 slamwareCorePlatform.moveBy(MoveDirection.BACKWARD);
+                break;
             case MOVEDIRECTION_TURN_LEFT:
                 slamwareCorePlatform.moveBy(MoveDirection.TURN_LEFT);
+                break;
             case MOVEDIRECTION_TURN_RIGHT:
                 slamwareCorePlatform.moveBy(MoveDirection.TURN_RIGHT);
+                break;
             case MOVEDIRECTION_CANCEL:
                 slamwareCorePlatform.getCurrentAction().cancel();
+                break;
         }
     }
 
     //slamtec 控制唤醒角度转向，这个方法只适用于硬件唤醒
     public void execBasicRotate(int degree){
-        Log.e(TAG,"execBasicRotate");
+        Log.e(TAG,"execBasicRotate:唤醒角度===="+degree);
         Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
         Preconditions.checkArgument(degree >= 0 && degree <=360,ERROR_MESSAGE_WAKEUP);
         if (degree < 180){
-            slamwareCorePlatform.rotateTo(new Rotation((float) Math.toRadians((double) -degree),0,0));
+            slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) -degree),0,0));
         }else {
-            slamwareCorePlatform.rotateTo(new Rotation((float) Math.toRadians((double) 360-degree),0,0));
+            slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) 360-degree),0,0));
         }
     }
 
     //slamtec 控制旋转方向和旋转角度
-    //direction:0是向左，1是向右。
+    //direction:3是向左，4是向右。
     public void execBasicRotate(int degree,int direction,int circle){
         Log.e(TAG,"execBasicRotate");
         Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);

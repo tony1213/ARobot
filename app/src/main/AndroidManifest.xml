@@ -47,7 +47,7 @@
         <activity android:name=".test.picasso.PicassoActivity" />
         <activity android:name=".base.BaseActivity" />
         <activity android:name=".test.other.OtherActivity" />
-        <activity android:name=".test.slam.MainActivity"/>
+        <activity android:name=".test.slam.SlamActivity" />
 
         <activity
             android:name=".core.software.videocall.impl.agora.AgoraActivity"
@@ -76,12 +76,12 @@
         <activity
             android:name=".test.vision.VisionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <service android:name=".test.other.VoiceServiceTest" />
         <service android:name=".core.software.music.impl.local.LocalPlayerService" />
 
-        <service android:name=".business.service.HardWareService"/>
+        <service android:name=".business.service.HardWareService" />
 
         <receiver android:name=".core.software.system.alarm.AlarmRemindReceiver" />
 

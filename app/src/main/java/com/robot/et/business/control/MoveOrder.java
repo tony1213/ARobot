@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.business.control.orderenum.MoveEnum;
+import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.util.Utilities;
 
@@ -35,20 +36,27 @@ public class MoveOrder {
                     if (digit == 0) {
                         digit = 90;// 默认90度
                     }
-                    SlamtecLoader.getInstance().execBasicRotate(digit,moveKey,0);
+                    if (GlobalConfig.isConnectSlam) {
+                        SlamtecLoader.getInstance().execBasicRotate(digit,moveKey,0);
+                    }
                 } else if (moveKey == MoveEnum.TURN_AFTER.getMoveKey()) {// 向后转
                     digit = 180;
-                    SlamtecLoader.getInstance().execBasicRotate(digit,3,0);
+                    if (GlobalConfig.isConnectSlam) {
+                        SlamtecLoader.getInstance().execBasicRotate(digit,3,0);
+                    }
                 } else {// 前进
-                    if (digit == 0) {
-                        digit = 1 * 1000;// 默认1米
-//                        SlamtecLoader.getInstance().execBasicMove(1);
-//                            float currentRobotX = SlamtecLoader.getInstance().getCurrentRobotPose().getX();
-//                            float currentRobotY = SlamtecLoader.getInstance().getCurrentRobotPose().getY();
-//                            SlamtecLoader.getInstance().execSetGoal(currentRobotX+digit,currentRobotY);
-                        SlamtecLoader.getInstance().execSetGoal(1,0);
-                    } else {
-                        digit *= 1000;// 单位是mm
+//                    if (digit == 0) {
+//                        digit = 1 * 1000;// 默认1米
+////                        SlamtecLoader.getInstance().execBasicMove(1);
+////                            float currentRobotX = SlamtecLoader.getInstance().getCurrentRobotPose().getX();
+////                            float currentRobotY = SlamtecLoader.getInstance().getCurrentRobotPose().getY();
+////                            SlamtecLoader.getInstance().execSetGoal(currentRobotX+digit,currentRobotY);
+//                        SlamtecLoader.getInstance().execSetGoal(1,0);
+//                    } else {
+//                        digit *= 1000;// 单位是mm
+//                    }
+                    if (GlobalConfig.isConnectSlam) {
+                        SlamtecLoader.getInstance().execBasicMove(MoveEnum.STOP.getMoveKey());
                     }
                 }
                 return true;

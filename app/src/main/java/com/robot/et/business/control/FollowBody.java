@@ -14,8 +14,6 @@ import com.robot.et.util.TimerManager;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static android.R.attr.delay;
-
 /**
  * 跟随
  */
@@ -47,6 +45,7 @@ public class FollowBody {
     public void follow() {
         if (!GlobalConfig.isFollow) {
             GlobalConfig.isFollow = true;
+            Log.i(TAG, "openBodyDetect()");
             Vision.getInstance().openBodyDetect();
         }
         timer = TimerManager.createTimer();
@@ -55,7 +54,7 @@ public class FollowBody {
             public void run() {
                 handler.sendEmptyMessage(0);
             }
-        }, delay, 500);
+        }, 1000, 500);
     }
 
     private Handler handler = new Handler() {
@@ -70,7 +69,9 @@ public class FollowBody {
                     int posZ = (int) centerZ;
                     // X==171.0--Y==71.0--Z==152.94118
                     Log.i(TAG, "获取到人体的位置：X＝" + posX + "--Y==" + posY + "--Z==" + posZ);
-                    SlamtecLoader.getInstance().execBasicMove(MoveEnum.FORWARD.getMoveKey());
+                    if (GlobalConfig.isConnectSlam) {
+                        SlamtecLoader.getInstance().execBasicMove(MoveEnum.FORWARD.getMoveKey());
+                    }
 
                 }
             });
@@ -88,7 +89,6 @@ public class FollowBody {
                 TimerManager.cancelTimer(timer);
                 timer = null;
             }
-            SlamtecLoader.getInstance().execBasicMove(MoveEnum.STOP.getMoveKey());
         }
     }
 }

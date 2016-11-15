@@ -32,25 +32,39 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class MainActivity extends BaseActivity {
+public class SlamActivity extends BaseActivity {
 
-    @BindView(R.id.forward) Button forward;
-    @BindView(R.id.backward) Button backward;
-    @BindView(R.id.left) Button left;
-    @BindView(R.id.right) Button right;
-    @BindView(R.id.clearMap) Button clearMap;
-    @BindView(R.id.test) Button test;
-    @BindView(R.id.execTurn) Button execTurn;
-    @BindView(R.id.moveGoal) Button moveGoal;
-    @BindView(R.id.battery) TextView battery;
-    @BindView(R.id.quality) TextView quality;
-    @BindView(R.id.charing) TextView charing;
-    @BindView(R.id.angle) EditText angle;
-    @BindView(R.id.goalx) EditText goalX;
-    @BindView(R.id.goaly) EditText goalY;
+    @BindView(R.id.forward)
+    Button forward;
+    @BindView(R.id.backward)
+    Button backward;
+    @BindView(R.id.left)
+    Button left;
+    @BindView(R.id.right)
+    Button right;
+    @BindView(R.id.clearMap)
+    Button clearMap;
+    @BindView(R.id.test)
+    Button test;
+    @BindView(R.id.execTurn)
+    Button execTurn;
+    @BindView(R.id.moveGoal)
+    Button moveGoal;
+    @BindView(R.id.battery)
+    TextView battery;
+    @BindView(R.id.quality)
+    TextView quality;
+    @BindView(R.id.charing)
+    TextView charing;
+    @BindView(R.id.angle)
+    EditText angle;
+    @BindView(R.id.goalx)
+    EditText goalX;
+    @BindView(R.id.goaly)
+    EditText goalY;
 
     static {
-        Log.e("MainActivity", "load library");
+        Log.e("SlamActivity", "load library");
         System.loadLibrary("rpsdk");
     }
 
@@ -63,7 +77,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         MapFragment fragment = new MapFragment();
-        transaction.add(R.id.container,fragment);
+        transaction.add(R.id.container, fragment);
         transaction.commit();
     }
 
@@ -76,7 +90,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (null == slamwareCorePlatform) {
-            Toast.makeText(MainActivity.this, "连接异常", Toast.LENGTH_LONG).show();
+            Toast.makeText(SlamActivity.this, "连接异常", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -115,21 +129,21 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick(R.id.execTurn)
-    public void execTurn(){
-        String data=angle.getText().toString().trim();
-        if (TextUtils.equals("",data)){
+    public void execTurn() {
+        String data = angle.getText().toString().trim();
+        if (TextUtils.equals("", data)) {
             return;
         }
-        double radians=Math.toRadians(Double.valueOf(data));
-        Rotation rotation = new Rotation((float)radians,0,0);
+        double radians = Math.toRadians(Double.valueOf(data));
+        Rotation rotation = new Rotation((float) radians, 0, 0);
         slamwareCorePlatform.rotate(rotation);
     }
 
     @OnClick(R.id.moveGoal)
-    public void execMoveGoal(){
+    public void execMoveGoal() {
         String dataX = goalX.getText().toString().trim();
         String dataY = goalY.getText().toString().trim();
-        if (TextUtils.equals("",dataX) || TextUtils.equals("",dataY)){
+        if (TextUtils.equals("", dataX) || TextUtils.equals("", dataY)) {
             Location location1 = new Location();
             location1.setX(1.0F);
             location1.setY(0.0F);
@@ -156,8 +170,8 @@ public class MainActivity extends BaseActivity {
             goals.add(location3);
             goals.add(location4);
 
-            slamwareCorePlatform.moveTo(goals,false,true);
-        }else {
+            slamwareCorePlatform.moveTo(goals, false, true);
+        } else {
             Location location = new Location();
             location.setX(Float.valueOf(dataX));
             location.setY(Float.valueOf(dataY));
@@ -165,8 +179,9 @@ public class MainActivity extends BaseActivity {
             slamwareCorePlatform.moveTo(location);
         }
     }
-    @OnClick({R.id.forward,R.id.backward,R.id.left,R.id.right})
-    public void execForward(View view){
+
+    @OnClick({R.id.forward, R.id.backward, R.id.left, R.id.right})
+    public void execForward(View view) {
         switch (view.getId()) {
             case R.id.forward:
                 SlamtecLoader.getInstance().execBasicMove(1);

@@ -41,13 +41,6 @@ public class VoiceHandler {
     }
 
     /**
-     * 主要是防止唤醒子线程中调用，不做任何处理
-     */
-    public static void init() {
-
-    }
-
-    /**
      * 说
      * @param speakContent 内容
      * @param callBack 说话完成的回调（可以为null）

@@ -14,4 +14,8 @@ public class GlobalConfig {
     public static boolean isFollow = false;
     // 是否显示表情
     public static boolean isShowEmotion = false;
+    // 是否连接上slam
+    public static boolean isConnectSlam = false;
+    // 是否连接上视觉
+    public static boolean isConnectVision = false;
 }

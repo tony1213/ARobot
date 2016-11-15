@@ -10,6 +10,7 @@ import android.util.Log;
 import com.robot.et.R;
 import com.robot.et.business.control.FollowBody;
 import com.robot.et.business.voice.VoiceHandler;
+import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.hardware.wakeup.IWakeUp;
 import com.robot.et.core.hardware.wakeup.WakeUpHandler;
 import com.robot.et.core.software.slam.SlamtecLoader;
@@ -46,9 +47,10 @@ public class HardWareService extends Service implements IWakeUp {
     @Override
     public void getVoiceWakeUpDegree(int degree) {
         Log.i(TAG, "degree===" + degree);
-        SlamtecLoader.getInstance().execBasicRotate(degree);
-        awakenNeedStop();
-        VoiceHandler.speakEndToListen(getAwakenContent());
+        Message msg = handler.obtainMessage();
+        msg.what = VOICE_AWAKEN;
+        msg.arg1 = degree;
+        handler.sendMessage(msg);
     }
 
     @Override
@@ -66,10 +68,20 @@ public class HardWareService extends Service implements IWakeUp {
 
     }
 
-    private static Handler handler = new Handler() {
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            switch (msg.what) {
+                case VOICE_AWAKEN:
+                    awakenNeedStop();
+                    if (GlobalConfig.isConnectSlam) {
+                        SlamtecLoader.getInstance().execBasicRotate(msg.arg1);
+                    }
+                    Log.i(TAG, "说内容");
+                    VoiceHandler.speakEndToListen(getAwakenContent());
+                    break;
+            }
         }
     };
 
@@ -82,6 +94,9 @@ public class HardWareService extends Service implements IWakeUp {
         // 停止听
         VoiceHandler.stopListen();
         FollowBody.getInstance().stopFollow();
+        if (GlobalConfig.isConnectSlam) {
+//            SlamtecLoader.getInstance().execBasicMove(MoveEnum.STOP.getMoveKey());
+        }
     }
 
     /**

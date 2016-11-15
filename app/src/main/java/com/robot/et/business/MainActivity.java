@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -14,12 +15,17 @@ import com.robot.et.R;
 import com.robot.et.business.service.HardWareService;
 import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.view.callback.ViewCallBack;
+import com.robot.et.business.vision.Vision;
+import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.voice.VoiceHandler;
+import com.robot.et.config.GlobalConfig;
+import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.widget.CustomTextView;
-import com.robot.et.test.vision.VisionActivity;
+import com.slamtec.slamware.SlamwareCorePlatform;
 
 public class MainActivity extends Activity implements ViewCallBack {
 
+    private static final String TAG = "mainInit";
     private LinearLayout showTextL, showEmotionL, showImgL;
     private ImageView imgEmotion, imageBitmap, imagePhoto;
     private CustomTextView tvText;
@@ -34,9 +40,10 @@ public class MainActivity extends Activity implements ViewCallBack {
         initView();
         // 设置view的接口回调
         ViewManager.setViewCallBack(this);
-        VoiceHandler.init();
         // 初始化service
-//        initService();
+        initService();
+        initSlam();
+        initVision();
     }
 
     /**
@@ -55,8 +62,34 @@ public class MainActivity extends Activity implements ViewCallBack {
             @Override
             public void onClick(View v) {
 //                VoiceHandler.listen();
-                Intent intent = new Intent(MainActivity.this, VisionActivity.class);
-                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * 初始化slam
+     */
+    private void initSlam() {
+        GlobalConfig.isConnectSlam = false;
+        SlamwareCorePlatform slamwareCorePlatform = SlamtecLoader.getInstance().execConnect();
+        if (slamwareCorePlatform != null) {
+            GlobalConfig.isConnectSlam = true;
+            Log.i(TAG, "slam初始化成功");
+        }
+    }
+
+    /**
+     * 初始化视觉
+     */
+    private void initVision() {
+        GlobalConfig.isConnectVision = false;
+        Vision.getInstance().initVision(new VisionInitCallBack() {
+            @Override
+            public void onVisionInitResult(boolean isSuccess) {
+                if (isSuccess) {
+                    GlobalConfig.isConnectVision = true;
+                    Log.i(TAG, "视觉初始化成功");
+                }
             }
         });
     }

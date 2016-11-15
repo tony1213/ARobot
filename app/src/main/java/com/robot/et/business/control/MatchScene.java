@@ -160,6 +160,10 @@ public class MatchScene {
 
                 break;
             case ENVIRONMENT_LEARN_SCENE:// 环境认识学习
+                if (!GlobalConfig.isConnectSlam) {
+                    VoiceHandler.speakEndToListen("未连接底盘");
+                    return true;
+                }
                 String locationName = MatchStringUtil.getLocationName(result);
                 Log.i(TAG, "locationName===" + locationName);
                 if (!TextUtils.isEmpty(locationName)) {
@@ -172,6 +176,10 @@ public class MatchScene {
 
                 break;
             case GO_WHERE_SCENE:// 去哪里的指令
+                if (!GlobalConfig.isConnectSlam) {
+                    VoiceHandler.speakEndToListen("未连接底盘");
+                    return true;
+                }
                 String areaName = MatchStringUtil.getGoWhereAnswer(result);
                 Log.i(TAG, "areaName===" + areaName);
                 if (!TextUtils.isEmpty(areaName)) {
@@ -197,6 +205,10 @@ public class MatchScene {
                 break;
             case FOLLOW_SCENE:// 跟着我
                 flag = true;
+                if (!GlobalConfig.isConnectVision) {
+                    VoiceHandler.speakEndToListen("未连接视觉");
+                    return true;
+                }
                 follow();
 
                 break;
@@ -288,6 +300,7 @@ public class MatchScene {
         Location location = SlamtecLoader.getInstance().getCurrentRobotPose();
         String posX = String.valueOf(location.getX());
         String posY = String.valueOf(location.getY());
+        Log.i(TAG, "posX===" + posX + "--posY==" + posY);
         FamilyLocationInfo info = mDb.getFamilyLocationInfo(locationName);
         if (info != null) {// 该位置已经记录，更新位置
             Log.i(TAG, "更新位置");
@@ -312,6 +325,7 @@ public class MatchScene {
         if (info != null) {
             String posX = info.getPositionX();
             String posY = info.getPositionY();
+            Log.i(TAG, "posX===" + posX + "--posY==" + posY);
             if (!TextUtils.isEmpty(posX) && !TextUtils.isEmpty(posY)) {
                 SlamtecLoader.getInstance().execSetGoal(Float.parseFloat(posX), Float.parseFloat(posY));
             } else {

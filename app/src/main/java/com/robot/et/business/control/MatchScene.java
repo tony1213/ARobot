@@ -5,9 +5,15 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.business.control.orderenum.MatchSceneEnum;
+import com.robot.et.business.vision.Vision;
+import com.robot.et.business.vision.callback.LearnOpenCallBack;
+import com.robot.et.business.vision.callback.LearnWaringCallBack;
+import com.robot.et.business.vision.callback.VisionLearnCallBack;
+import com.robot.et.business.vision.callback.VisionRecogniseCallBack;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
+import com.robot.et.business.voice.callback.VolumeCallBack;
 import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.system.volume.VolumeControlManager;
@@ -15,6 +21,9 @@ import com.robot.et.db.RobotDB;
 import com.robot.et.entity.FamilyLocationInfo;
 import com.robot.et.util.MatchStringUtil;
 import com.slamtec.slamware.robot.Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by houdeming on 2016/9/9.
@@ -173,6 +182,28 @@ public class MatchScene {
 
                 break;
             case VISION_LEARN_SCENE:// 视觉学习
+                if (!GlobalConfig.isConnectVision) {
+                    VoiceHandler.speakEndToListen("未连接视觉");
+                    return true;
+                }
+                // 跟随的时候不开启视觉学习
+                if (GlobalConfig.isFollow) {
+                    return false;
+                }
+                flag = true;
+                final String learnContent = MatchStringUtil.getVisionLearnAnswer(result);
+                // 视觉学习只打开一次，不连续打开
+                if (!GlobalConfig.isVisionLearn) {
+                    GlobalConfig.isVisionLearn = true;
+                    Vision.getInstance().openLearn(new LearnOpenCallBack() {
+                        @Override
+                        public void onLearnOpenEnd() {
+                            learn(learnContent);
+                        }
+                    });
+                } else {
+                    learn(learnContent);
+                }
 
                 break;
             case GO_WHERE_SCENE:// 去哪里的指令
@@ -208,6 +239,10 @@ public class MatchScene {
                 if (!GlobalConfig.isConnectVision) {
                     VoiceHandler.speakEndToListen("未连接视觉");
                     return true;
+                }
+                // 视觉学习的时候不开启跟随
+                if (GlobalConfig.isVisionLearn) {
+                    return false;
                 }
                 follow();
 
@@ -266,12 +301,35 @@ public class MatchScene {
         });
     }
 
+    private static boolean isVolumeOver = false;
+
     /**
      * 进入安保场景
      */
     private static void enterSecurity() {
         GlobalConfig.isSecurityMode = true;
-        VoiceHandler.speakEndToListen("好的，已进入安保模式");
+        isVolumeOver = false;
+        VoiceHandler.speak("好的，已进入安保模式", new SpeakEndCallBack() {
+            @Override
+            public void onSpeakEnd() {
+                VoiceHandler.listen(new VolumeCallBack() {
+
+                    @Override
+                    public void onVolumeChanged(int volumeValue) {
+                        Log.i(TAG, "volumeValue===" + volumeValue);
+                        if (volumeValue > 10 && !isVolumeOver) {
+                            isVolumeOver = true;
+                            VoiceHandler.stopListen();
+                            VoiceHandler.setVolumeCallBack(null);
+                            Log.i(TAG, "开始安防");
+                            if (GlobalConfig.isConnectSlam) {
+                                patrol();
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -288,6 +346,32 @@ public class MatchScene {
     private static void follow() {
         VoiceHandler.speakEndToListen("好的");
         FollowBody.getInstance().follow();
+    }
+
+    /**
+     * 巡逻
+     */
+    private static void patrol() {
+        RobotDB mDb = RobotDB.getInstance();
+        List<FamilyLocationInfo> infos = mDb.getFamilyLocationInfos();
+        int size = infos.size();
+        Log.i(TAG, "size==" + size);
+        if (infos != null && size > 0) {
+            List<Location> locations = new ArrayList<Location>();
+            for (int i = 0; i < size; i++) {
+                Location location = new Location();
+                String posX = infos.get(i).getPositionX();
+                String posY = infos.get(i).getPositionY();
+                if (!TextUtils.isEmpty(posX) && !TextUtils.isEmpty(posY)) {
+                    location.setX(Float.parseFloat(posX));
+                    location.setY(Float.parseFloat(posY));
+                    locations.add(location);
+                }
+            }
+            if (locations != null && locations.size() > 0) {
+                SlamtecLoader.getInstance().execPatrol(locations);
+            }
+        }
     }
 
     /**
@@ -318,6 +402,7 @@ public class MatchScene {
 
     /**
      * 去哪里
+     *
      * @param locationName
      */
     private static void goToLocation(String locationName) {
@@ -334,5 +419,84 @@ public class MatchScene {
         } else {
             VoiceHandler.speakEndToListen("位置不明确，请先指定位置");
         }
+    }
+
+    private static boolean isLearnIng = false;
+    private static boolean isSpeakIng = false;
+    private static int lastWaringId = 0;
+
+    /**
+     * 学习
+     *
+     * @param content
+     */
+    private static void learn(String content) {
+        isLearnIng = false;
+        isSpeakIng = false;
+        lastWaringId = 0;
+        // 每次学习或者识别的时候先获取学习中的提示
+        Vision.getInstance().getLearnWaring(new LearnWaringCallBack() {
+            @Override
+            public void onLearnWaring(int id, String content) {
+                Log.i(TAG, "id==" + id);
+                if (id == 0) {// 位置是正确的
+                    if (!isLearnIng) {
+                        isLearnIng = true;
+                        if (TextUtils.isEmpty(content)) {// 什么   识别
+                            visionRecognise(content);
+                        } else {// 学习
+                            visionLearn(content);
+                        }
+                    } else {
+                        speak(id, content);
+                    }
+                } else {// 位置比较偏
+                    speak(id, content);
+                }
+            }
+        });
+    }
+
+    private static void speak(int id, String content) {
+        if (!isSpeakIng && lastWaringId != id) {
+            isSpeakIng = true;
+            lastWaringId = id;
+            VoiceHandler.speak(content, new SpeakEndCallBack() {
+                @Override
+                public void onSpeakEnd() {
+                    isSpeakIng = false;
+                }
+            });
+        }
+    }
+
+    /**
+     * 视觉学习
+     *
+     * @param content
+     */
+    private static void visionLearn(String content) {
+        VoiceHandler.speak("请不同角度展示物体", null);
+        Vision.getInstance().startLearn(content, new VisionLearnCallBack() {
+            @Override
+            public void onLearnEnd() {
+                VoiceHandler.speakEndToListen("好的，我记住了");
+            }
+        });
+    }
+
+    /**
+     * 视觉识别
+     *
+     * @param content
+     */
+    private static void visionRecognise(final String content) {
+        VoiceHandler.speak("正在识别中，请等待", null);
+        Vision.getInstance().startRecognise(new VisionRecogniseCallBack() {
+            @Override
+            public void onVisionRecogniseResult(boolean isRecogniseSuccess, String speakContent) {
+                VoiceHandler.speakEndToListen(speakContent);
+            }
+        });
     }
 }

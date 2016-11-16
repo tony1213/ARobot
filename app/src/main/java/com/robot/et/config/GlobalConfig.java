@@ -18,4 +18,6 @@ public class GlobalConfig {
     public static boolean isConnectSlam = false;
     // 是否连接上视觉
     public static boolean isConnectVision = false;
+    // 是否是视觉学习
+    public static boolean isVisionLearn = false;
 }

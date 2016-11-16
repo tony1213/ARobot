@@ -10,12 +10,4 @@ public interface LearnOpenCallBack {
      * 学习打开
      */
     void onLearnOpenEnd();
-
-    /**
-     * 学习中的警告
-     *
-     * @param id
-     * @param content
-     */
-    void onLearnWaring(int id, String content);
 }

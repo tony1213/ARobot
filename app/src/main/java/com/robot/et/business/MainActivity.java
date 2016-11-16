@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements ViewCallBack {
         initService();
         initSlam();
         initVision();
+
     }
 
     /**

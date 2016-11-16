@@ -430,6 +430,32 @@ public class RobotDB {
     }
 
     /**
+     * 获取所有的位置坐标点
+     * @return
+     */
+    public List<FamilyLocationInfo> getFamilyLocationInfos() {
+        String sql = "select * from familyLocation";
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor c = db.rawQuery(sql, new String[]{});
+        List<FamilyLocationInfo> infos = new ArrayList<FamilyLocationInfo>();
+        while (c.moveToNext()) {
+            FamilyLocationInfo info = new FamilyLocationInfo();
+            info.setRobotNum(c.getString(c.getColumnIndex("robotNum")));
+            info.setPositionName(c.getString(c.getColumnIndex("positionName")));
+            info.setPositionX(c.getString(c.getColumnIndex("positionX")));
+            info.setPositionY(c.getString(c.getColumnIndex("positionY")));
+            info.setSpareContent(c.getString(c.getColumnIndex("spareContent")));
+            info.setSpareContent2(c.getString(c.getColumnIndex("spareContent2")));
+            info.setSpareContent3(c.getString(c.getColumnIndex("spareContent3")));
+            info.setSpareType(c.getInt(c.getColumnIndex("spareType")));
+            infos.add(info);
+        }
+        c.close();
+        db.close();
+        return infos;
+    }
+
+    /**
      * 更新位置坐标
      * @param positionName 位置
      * @param positionX x坐标

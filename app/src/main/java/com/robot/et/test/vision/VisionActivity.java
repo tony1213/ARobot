@@ -1,6 +1,13 @@
 package com.robot.et.test.vision;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
@@ -11,6 +18,14 @@ import android.widget.Button;
 import com.robot.et.R;
 import com.robot.et.VisionManager;
 import com.robot.et.callback.VisionCallBack;
+import org.openni.DeviceInfo;
+
+import org.openni.NativeMethods;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by houdeming on 2016/11/12.
@@ -20,6 +35,7 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
 
     private static final String TAG = "visionTest";
     private VisionManager visionManager;
+    private String mActionUsbPermission = "act.usb.action";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +67,113 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
 
         visionManager = new VisionManager(this);
 
+        //注册USB设备权限管理广播
+        IntentFilter filter = new IntentFilter(mActionUsbPermission);
+        registerReceiver(usbReceiver, filter);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PendingIntent permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+                this.mActionUsbPermission), 0);
+
+//        List<DeviceInfo> devices = enumerateDevices();
+//        if (devices.isEmpty()) {
+//            Log.i(TAG, "devices.isEmpty()");
+//            return;
+//        }
+//
+//        String uri = devices.get(0).getUri();
+//        Log.i(TAG, "uri==" + uri);
+//
+//        UsbDevice usbDevice = getUsbDevice(uri);
+
+        DeviceInfo info = new DeviceInfo("04b4/1003@3/19", "", "/dev/bus/usb/003/004", 7463, 1537);
+
+        UsbDevice usbDevice = getUsbDevice(info);
+
+        if (usbDevice != null) {
+            Log.i(TAG, "usbDevice != null");
+//            UsbManager manager = (UsbManager)this.getSystemService("usb");
+//            manager.requestPermission(usbDevice, permissionIntent);
+        } else {
+            Log.i(TAG, "usbDevice == null");
+        }
+    }
+
+    public UsbDevice getUsbDevice(String uri)
+    {
+        List devices = enumerateDevices();
+        Iterator iterator = devices.iterator();
+        while (iterator.hasNext()) {
+            DeviceInfo deviceInfo = (DeviceInfo)iterator.next();
+            if (deviceInfo.getUri().compareTo(uri) == 0) {
+                return getUsbDevice(deviceInfo);
+            }
+        }
+
+        return null;
+    }
+
+    public static List<DeviceInfo> enumerateDevices() {
+        List devices = new ArrayList();
+        NativeMethods.checkReturnStatus(NativeMethods.oniGetDeviceList(devices));
+        return devices;
+    }
+
+    public UsbDevice getUsbDevice(DeviceInfo deviceInfo) {
+        UsbManager manager = (UsbManager)this.getSystemService("usb");
+        HashMap deviceList = manager.getDeviceList();
+        Iterator iterator = deviceList.values().iterator();
+
+        while (iterator.hasNext()) {
+            UsbDevice usbDevice = (UsbDevice)iterator.next();
+
+            if ((usbDevice.getVendorId() == deviceInfo.getUsbVendorId()) && (usbDevice.getProductId() == deviceInfo.getUsbProductId())) {
+                return usbDevice;
+            }
+        }
+
+        return null;
+    }
+
+    private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.i(TAG, "action==" + action);
+            if (mActionUsbPermission.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (device == null) {
+                        Log.i(TAG, "111device == null");
+                        return;
+                    }
+
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+                        }
+                        try {
+
+                        } catch (Exception e) {
+                            Log.i(TAG, "Exception");
+                        }
+
+                    } else {
+                        Log.i(TAG, "用户不允许USB访问设备，程序退出");
+                    }
+                }
+            }
+        }
+
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(usbReceiver);
     }
 
     @Override

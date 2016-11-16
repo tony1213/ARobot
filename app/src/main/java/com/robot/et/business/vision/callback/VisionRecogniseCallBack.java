@@ -9,8 +9,8 @@ public interface VisionRecogniseCallBack {
     /**
      * 识别结果
      *
-     * @param name 物体名字
-     * @param conf 物体的识别度
+     * @param isRecogniseSuccess 是否识别成功
+     * @param speakContent 说话的内容
      */
-    void onVisionRecogniseResult(String name, int conf);
+    void onVisionRecogniseResult(boolean isRecogniseSuccess, String speakContent);
 }

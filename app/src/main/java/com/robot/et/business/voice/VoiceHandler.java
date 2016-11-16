@@ -13,6 +13,7 @@ import com.robot.et.business.control.MoveOrder;
 import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
+import com.robot.et.business.voice.callback.VolumeCallBack;
 import com.robot.et.core.software.voice.IVoice;
 import com.robot.et.core.software.voice.VoiceFactory;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
@@ -32,6 +33,7 @@ public class VoiceHandler {
     private static IVoice turingVoice;
     private static SpeakEndCallBack mSpeakEndCallBack;
     private static ListenResultCallBack mListenResultCallBack;
+    private static VolumeCallBack volumeCallBack;
     private static final int VIEW_IMG = 1;
 
     static {
@@ -76,6 +78,19 @@ public class VoiceHandler {
         listen(listenResultCallBack);
     }
 
+    /**
+     * 音量的回调
+     * @param callBack
+     */
+    public static void listen(VolumeCallBack callBack) {
+        volumeCallBack = callBack;
+        listen(listenResultCallBack);
+    }
+
+    public static void setVolumeCallBack(VolumeCallBack callBack) {
+        volumeCallBack = callBack;
+    }
+
     private static SpeakCallBack speakCallBack = new SpeakCallBack() {
         @Override
         public void onSpeakBegin() {
@@ -106,6 +121,9 @@ public class VoiceHandler {
         public void onVolumeChanged(int volumeValue) {
             // 音量值0-30
             Log.i(TAG, "volumeValue==" + volumeValue);
+            if (volumeCallBack != null) {
+                volumeCallBack.onVolumeChanged(volumeValue);
+            }
         }
 
         @Override

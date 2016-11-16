@@ -1,11 +1,13 @@
 package com.robot.et.business.vision;
 
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.robot.et.VisionManager;
 import com.robot.et.business.vision.callback.BodyPositionCallBack;
 import com.robot.et.business.vision.callback.LearnOpenCallBack;
+import com.robot.et.business.vision.callback.LearnWaringCallBack;
 import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.vision.callback.VisionLearnCallBack;
 import com.robot.et.business.vision.callback.VisionRecogniseCallBack;
@@ -25,6 +27,7 @@ public class Vision implements VisionCallBack {
     private VisionRecogniseCallBack recogniseCallBack;
     private BodyPositionCallBack positionCallBack;
     private LearnOpenCallBack learnOpenCallBack;
+    private LearnWaringCallBack learnWaringCallBack;
 
     private Vision() {
         visionManager = new VisionManager(this);
@@ -88,6 +91,14 @@ public class Vision implements VisionCallBack {
         } catch (RemoteException e) {
             Log.i(TAG, "closeLearn() RemoteException");
         }
+    }
+
+    /**
+     * 回调视觉中的提示（在 learnOpenEnd() 方法回调后调用 ）
+     * @param callBack
+     */
+    public void getLearnWaring(LearnWaringCallBack callBack) {
+        learnWaringCallBack = callBack;
     }
 
     /**
@@ -163,11 +174,8 @@ public class Vision implements VisionCallBack {
         Log.i(TAG, "learnWaring() id==" + id);
         String content = "";
         switch (id) {
-            case -1:
-                content = "视觉学习未开启";
-                break;
             case 0:
-                content = "好的，记住了";
+                content = "物体已经在最佳位置";
                 break;
             case 1:
                 content = "距离太近了";
@@ -194,8 +202,8 @@ public class Vision implements VisionCallBack {
                 content = "东西太小了，看不清";
                 break;
         }
-        if (learnOpenCallBack != null) {
-            learnOpenCallBack.onLearnWaring(id, content);
+        if (learnWaringCallBack != null) {
+            learnWaringCallBack.onLearnWaring(id, content);
         }
     }
 
@@ -210,8 +218,36 @@ public class Vision implements VisionCallBack {
     @Override
     public void learnRecogniseEnd(String name, int conf) {
         Log.i(TAG, "learnRecogniseEnd() name==" + name + "---conf==" + conf);
+        String content = "";
+        boolean isRecogniseSuccess = false;
+        if (TextUtils.isEmpty(name)) {// 沒有识别成功
+            content = "我不认识这个东西，让我学习一下吧！";
+        } else {// 识别成功
+            isRecogniseSuccess = true;
+            switch (conf) {
+                case 1:// 可能（40%以上）
+                    content = "这好像是：" + name;
+                    break;
+                case 2:// 是（80%以上）
+                    content = "这是" + name;
+                    break;
+                case 3:// 一定（95%以上）
+                    content = "这是" + name;
+                    break;
+                case 10:// 不是就是的情况
+                    if (name.contains("|")) {
+                        String[] data = name.split("\\|");
+                        Log.i(TAG, "learnRecogniseEnd() data[0]==" + data[0] + "---data[1]==" + data[1]);
+                        content = "这个不是：" + data[0] + "，就是：" + data[1];
+                    } else {
+                        isRecogniseSuccess = false;
+                        content = "我不认识这个东西，让我学习一下吧！";
+                    }
+                    break;
+            }
+        }
         if (recogniseCallBack != null) {
-            recogniseCallBack.onVisionRecogniseResult(name, conf);
+            recogniseCallBack.onVisionRecogniseResult(isRecogniseSuccess, content);
         }
     }
 

@@ -19,6 +19,7 @@ import com.robot.et.business.vision.Vision;
 import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.config.GlobalConfig;
+import com.robot.et.core.software.push.ali.ALiPush;
 import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.widget.CustomTextView;
 import com.slamtec.slamware.SlamwareCorePlatform;
@@ -63,6 +64,8 @@ public class MainActivity extends Activity implements ViewCallBack {
             @Override
             public void onClick(View v) {
 //                VoiceHandler.listen();
+                // 初始化阿里推送
+                new ALiPush(MainActivity.this, "80000057");
             }
         });
     }

@@ -1,13 +1,16 @@
 package com.robot.et.app;
 
 import android.app.Application;
+import android.util.Log;
 
+import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.robot.et.core.software.videocall.impl.agora.BaseEngineEventHandlerActivity;
 import com.robot.et.core.software.videocall.impl.agora.MessageHandler;
 import com.robot.et.core.software.voice.impl.ifly.util.SpeakConfig;
-import com.slamtec.slamware.SlamwareCorePlatform;
 
 import io.agora.rtc.RtcEngine;
 
@@ -31,6 +34,8 @@ public class CustomApplication extends Application {
         initVoice();
         // 初始化agora视频
         initAgora();
+        // 初始化云推送
+        initCloudChannel();
     }
 
     // 初始化科大讯飞
@@ -58,11 +63,31 @@ public class CustomApplication extends Application {
         rtcEngine = RtcEngine.create(getApplicationContext(), agoraKey, messageHandler);
     }
 
-    public RtcEngine getRtcEngine(){
+    public RtcEngine getRtcEngine() {
         return rtcEngine;
     }
 
-    public void setEngineEventHandlerActivity(BaseEngineEventHandlerActivity engineEventHandlerActivity){
+    public void setEngineEventHandlerActivity(BaseEngineEventHandlerActivity engineEventHandlerActivity) {
         messageHandler.setActivity(engineEventHandlerActivity);
+    }
+
+    /**
+     * 初始化阿里云推送通道
+     * 一定要放在这里初始化云推送，不然清掉apk再打开，接受不到推送的消息
+     */
+    private void initCloudChannel() {
+        PushServiceFactory.init(this);
+        CloudPushService pushService = PushServiceFactory.getCloudPushService();
+        pushService.register(this, new CommonCallback() {
+            @Override
+            public void onSuccess(String response) {
+                Log.i("alipush", "init cloudchannel success");
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                Log.i("alipush", "init cloudchannel failed -- errorcode:" + errorCode + " -- errorMessage:" + errorMessage);
+            }
+        });
     }
 }

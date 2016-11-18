@@ -12,14 +12,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.robot.et.R;
-import com.robot.et.business.vision.Vision;
-import com.robot.et.business.vision.callback.BodyPositionCallBack;
-import com.robot.et.business.vision.callback.LearnOpenCallBack;
-import com.robot.et.business.vision.callback.VisionBitmapCallBack;
-import com.robot.et.business.vision.callback.VisionImgInfoCallBack;
-import com.robot.et.business.vision.callback.VisionInitCallBack;
-import com.robot.et.business.vision.callback.VisionLearnCallBack;
-import com.robot.et.business.vision.callback.VisionRecogniseCallBack;
+import com.robot.et.core.software.vision.Vision;
+import com.robot.et.core.software.vision.callback.BodyPositionCallBack;
+import com.robot.et.core.software.vision.callback.LearnOpenCallBack;
+import com.robot.et.core.software.vision.callback.VisionBitmapCallBack;
+import com.robot.et.core.software.vision.callback.VisionImgInfoCallBack;
+import com.robot.et.core.software.vision.callback.VisionInitCallBack;
+import com.robot.et.core.software.vision.callback.VisionLearnCallBack;
+import com.robot.et.core.software.vision.callback.VisionRecogniseCallBack;
 import com.robot.et.util.TimerManager;
 
 import java.util.Timer;

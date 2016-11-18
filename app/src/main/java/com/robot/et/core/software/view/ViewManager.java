@@ -1,6 +1,6 @@
-package com.robot.et.business.view;
+package com.robot.et.core.software.view;
 
-import com.robot.et.business.view.callback.ViewCallBack;
+import com.robot.et.core.software.view.callback.ViewCallBack;
 
 /**
  * Created by houdeming on 2016/11/11.

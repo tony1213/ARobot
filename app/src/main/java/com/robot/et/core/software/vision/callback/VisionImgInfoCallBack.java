@@ -1,4 +1,4 @@
-package com.robot.et.business.vision.callback;
+package com.robot.et.core.software.vision.callback;
 
 /**
  * Created by houdeming on 2016/11/18.

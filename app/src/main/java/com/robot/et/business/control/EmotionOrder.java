@@ -2,7 +2,7 @@ package com.robot.et.business.control;
 
 import android.text.TextUtils;
 
-import com.robot.et.business.view.ViewManager;
+import com.robot.et.core.software.view.ViewManager;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.core.software.control.emotion.Emotion;
 import com.robot.et.core.software.control.emotion.EmotionEnum;

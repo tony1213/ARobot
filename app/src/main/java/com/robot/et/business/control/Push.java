@@ -79,7 +79,7 @@ public class Push implements IPush {
                 break;
             case RequestConfig.JPUSH_ROBOT_SPEAK:// 机器人学习库，通过说话学习
                 Log.i(TAG, "机器人问答库通过说话学习");
-                MatchScene.geToWhere(musicContent);
+                Navigation.goDesignedLocation(musicContent);
 
                 break;
         }

@@ -10,7 +10,7 @@ import android.util.Log;
 import com.robot.et.R;
 import com.robot.et.business.control.FollowBody;
 import com.robot.et.business.media.Music;
-import com.robot.et.business.vision.Vision;
+import com.robot.et.core.software.vision.Vision;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.hardware.wakeup.IWakeUp;

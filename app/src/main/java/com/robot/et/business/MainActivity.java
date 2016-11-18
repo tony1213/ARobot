@@ -14,15 +14,14 @@ import android.widget.LinearLayout;
 import com.robot.et.R;
 import com.robot.et.business.control.Push;
 import com.robot.et.business.service.HardWareService;
-import com.robot.et.business.view.ViewManager;
-import com.robot.et.business.view.callback.ViewCallBack;
-import com.robot.et.business.vision.Vision;
-import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.software.slam.SlamtecLoader;
+import com.robot.et.core.software.view.ViewManager;
+import com.robot.et.core.software.view.callback.ViewCallBack;
+import com.robot.et.core.software.vision.Vision;
+import com.robot.et.core.software.vision.callback.VisionInitCallBack;
 import com.robot.et.core.software.widget.CustomTextView;
-import com.robot.et.test.vision.VisionActivity;
 import com.slamtec.slamware.SlamwareCorePlatform;
 
 public class MainActivity extends Activity implements ViewCallBack {
@@ -65,10 +64,10 @@ public class MainActivity extends Activity implements ViewCallBack {
         showEmotionL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                VoiceHandler.listen();
+                VoiceHandler.listen();
 
-                Intent intent = new Intent(MainActivity.this, VisionActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, VisionActivity.class);
+//                startActivity(intent);
 
 //                FollowBody.getInstance().follow();
             }

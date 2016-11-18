@@ -11,7 +11,7 @@ import com.robot.et.app.CustomApplication;
 import com.robot.et.business.control.MatchScene;
 import com.robot.et.business.control.MoveOrder;
 import com.robot.et.business.media.Music;
-import com.robot.et.business.view.ViewManager;
+import com.robot.et.core.software.view.ViewManager;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
 import com.robot.et.business.voice.callback.VolumeCallBack;

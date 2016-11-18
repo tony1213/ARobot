@@ -73,6 +73,18 @@
                 android:layout_height="45dp"
                 />
 
+            <Button
+                android:id="@+id/btn_bitmap"
+                android:text="bitmap"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                />
+
+            <ImageView
+                android:id="@+id/img_vision"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,5 +1,7 @@
 package com.robot.et.callback;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by houdeming on 2016/11/11.
  * 视觉学习的回调
@@ -39,4 +41,18 @@ public interface VisionCallBack {
      * @param centerZ Z坐标
      */
     void bodyPosition(float centerX, float centerY, float centerZ);
+
+    /**
+     * 获取视觉图像的信息
+     * @param width 宽
+     * @param height 高
+     * @param dataType 格式
+     */
+    void getVisionImgInfo(int width, int height, int dataType);
+
+    /**
+     * 获取bitmap
+     * @param bitmap
+     */
+    void getImgBitmap(Bitmap bitmap);
 }

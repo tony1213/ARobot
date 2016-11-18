@@ -1,5 +1,6 @@
 package com.robot.et;
 
+import android.graphics.Bitmap;
 import android.os.RemoteException;
 
 import com.robot.et.callback.VisionCallBack;
@@ -14,10 +15,15 @@ import com.robot.et.vision.IRobotVision;
 public class VisionManager extends IRobotVision.Stub {
 
     private VisionCallBack mCallBack;
+    private Bitmap mBitmap;
 
     public VisionManager(VisionCallBack callBack) {
         mCallBack = callBack;
         RobotVision.setVisionCallBack(callBack);
+    }
+
+    public void setImgBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
     }
 
     @Override
@@ -71,6 +77,23 @@ public class VisionManager extends IRobotVision.Stub {
         RobotVision.bodyDetectGetPos(pos);
         if (mCallBack != null) {
             mCallBack.bodyPosition(pos.centerX, pos.centerY, pos.centerZ);
+        }
+    }
+
+    @Override
+    public void getVisionImgInfo() throws RemoteException {
+        RobotVision.ImageInfo imgInfo = new RobotVision.ImageInfo();
+        RobotVision.visionImageGetInfo(imgInfo);
+        if (mCallBack != null) {
+            mCallBack.getVisionImgInfo(imgInfo.width, imgInfo.height, imgInfo.dataType);
+        }
+    }
+
+    @Override
+    public void getVisionImgBitmap() throws RemoteException {
+        RobotVision.visionImageGetData(mBitmap);
+        if (mCallBack != null) {
+            mCallBack.getImgBitmap(mBitmap);
         }
     }
 }

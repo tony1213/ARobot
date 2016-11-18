@@ -1,5 +1,6 @@
 package com.robot.et.business.vision;
 
+import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,6 +9,8 @@ import com.robot.et.VisionManager;
 import com.robot.et.business.vision.callback.BodyPositionCallBack;
 import com.robot.et.business.vision.callback.LearnOpenCallBack;
 import com.robot.et.business.vision.callback.LearnWaringCallBack;
+import com.robot.et.business.vision.callback.VisionBitmapCallBack;
+import com.robot.et.business.vision.callback.VisionImgInfoCallBack;
 import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.vision.callback.VisionLearnCallBack;
 import com.robot.et.business.vision.callback.VisionRecogniseCallBack;
@@ -16,6 +19,8 @@ import com.robot.et.callback.VisionCallBack;
 /**
  * Created by houdeming on 2016/11/14.
  * 视觉的处理
+ * 备注：当视觉初始化成功后，底层便有图像上传，不管中间开关学习与跟随，图像还是存在，只有
+ * 反初始化视觉后，图像不再回调，
  */
 
 public class Vision implements VisionCallBack {
@@ -28,6 +33,9 @@ public class Vision implements VisionCallBack {
     private BodyPositionCallBack positionCallBack;
     private LearnOpenCallBack learnOpenCallBack;
     private LearnWaringCallBack learnWaringCallBack;
+    private VisionImgInfoCallBack imgInfoCallBack;
+    private VisionBitmapCallBack bitmapCallBack;
+    private Bitmap mBitmap;
 
     private Vision() {
         visionManager = new VisionManager(this);
@@ -95,6 +103,7 @@ public class Vision implements VisionCallBack {
 
     /**
      * 回调视觉中的提示（在 learnOpenEnd() 方法回调后调用 ）
+     *
      * @param callBack
      */
     public void getLearnWaring(LearnWaringCallBack callBack) {
@@ -161,6 +170,50 @@ public class Vision implements VisionCallBack {
         }
     }
 
+    /**
+     * 获取视觉的信息
+     *
+     * @param visionImgInfoCallBack
+     */
+    public void getImgInfo(VisionImgInfoCallBack visionImgInfoCallBack) {
+        imgInfoCallBack = visionImgInfoCallBack;
+        try {
+            visionManager.getVisionImgInfo();
+        } catch (RemoteException e) {
+            Log.i(TAG, "getImgInfo() RemoteException");
+        }
+    }
+
+    /**
+     * 获取视觉的bitmap (获取图像时先下发bitmap 到底层)
+     *
+     * @param visionBitmapCallBack
+     */
+    public void getVisionBitmap(VisionBitmapCallBack visionBitmapCallBack) {
+        bitmapCallBack = visionBitmapCallBack;
+        try {
+            visionManager.getVisionImgBitmap();
+        } catch (RemoteException e) {
+            Log.i(TAG, "getVisionBitmap() RemoteException");
+        }
+    }
+
+    /**
+     * 设置一张图片到底层用于回调视觉的bitmap
+     *
+     * @param visionImgWidth  视觉图片的宽
+     * @param visionImgHeight 视觉图片的高
+     */
+    public void sendBitmapToFramework(int visionImgWidth, int visionImgHeight) {
+        mBitmap = Bitmap.createBitmap(visionImgWidth, visionImgHeight, Bitmap.Config.ARGB_8888);
+        if (mBitmap != null) {
+            visionManager.setImgBitmap(mBitmap);
+        }
+    }
+
+    /**
+     * 底层回调的方法
+     */
     @Override
     public void learnOpenEnd() {
         Log.i(TAG, "learnOpenEnd()");
@@ -169,6 +222,9 @@ public class Vision implements VisionCallBack {
         }
     }
 
+    /**
+     * 底层回调的方法
+     */
     @Override
     public void learnWaring(int id) {
         Log.i(TAG, "learnWaring() id==" + id);
@@ -207,6 +263,9 @@ public class Vision implements VisionCallBack {
         }
     }
 
+    /**
+     * 底层回调的方法
+     */
     @Override
     public void learnEnd() {
         Log.i(TAG, "learnEnd()");
@@ -215,6 +274,9 @@ public class Vision implements VisionCallBack {
         }
     }
 
+    /**
+     * 底层回调的方法
+     */
     @Override
     public void learnRecogniseEnd(String name, int conf) {
         Log.i(TAG, "learnRecogniseEnd() name==" + name + "---conf==" + conf);
@@ -251,11 +313,36 @@ public class Vision implements VisionCallBack {
         }
     }
 
+    /**
+     * 底层回调的方法
+     */
     @Override
     public void bodyPosition(float centerX, float centerY, float centerZ) {
         Log.i(TAG, "learnOpenEnd() centerX==" + centerX + "--centerY==" + centerY + "--centerZ==" + centerZ);
         if (positionCallBack != null) {
             positionCallBack.onBodyPosition(centerX, centerY, centerZ);
+        }
+    }
+
+    /**
+     * 底层回调的方法
+     */
+    @Override
+    public void getVisionImgInfo(int width, int height, int dataType) {
+        Log.i(TAG, "getVisionImgInfo() width==" + width + "--height==" + height + "--dataType==" + dataType);
+        if (imgInfoCallBack != null) {
+            imgInfoCallBack.onVisionImgInfo(width, height, dataType);
+        }
+
+    }
+
+    /**
+     * 底层回调的方法
+     */
+    @Override
+    public void getImgBitmap(Bitmap bitmap) {
+        if (bitmapCallBack != null) {
+            bitmapCallBack.onVisionBitmap(bitmap);
         }
     }
 }

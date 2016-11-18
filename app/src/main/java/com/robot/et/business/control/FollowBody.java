@@ -25,7 +25,6 @@ public class FollowBody {
     private static final String TAG_ANGLE = "angle";
     private static FollowBody followBody = null;
     private Timer timer;
-    private Timer robotTimer;
     // 停止的距离
     private final int STOP_VALUE = 115;
     private float robotX;
@@ -67,7 +66,6 @@ public class FollowBody {
             }
         }, 0, 30);
 
-        robotTimer = TimerManager.createTimer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -175,10 +173,6 @@ public class FollowBody {
             if (timer != null) {
                 TimerManager.cancelTimer(timer);
                 timer = null;
-            }
-            if (robotTimer != null) {
-                TimerManager.cancelTimer(robotTimer);
-                robotTimer = null;
             }
         }
     }

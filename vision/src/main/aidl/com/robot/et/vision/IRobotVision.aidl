@@ -32,4 +32,10 @@ interface IRobotVision {
 
     // 人体检测
     void bodyDetectGetPos();
+
+    // 获取视觉图片的信息
+    void getVisionImgInfo();
+
+    // 获取视觉图片的bitmap
+    void getVisionImgBitmap();
 }

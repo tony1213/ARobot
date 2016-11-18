@@ -22,6 +22,7 @@ import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.config.GlobalConfig;
 import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.widget.CustomTextView;
+import com.robot.et.test.vision.VisionActivity;
 import com.slamtec.slamware.SlamwareCorePlatform;
 
 public class MainActivity extends Activity implements ViewCallBack {
@@ -43,9 +44,9 @@ public class MainActivity extends Activity implements ViewCallBack {
         // 设置view的接口回调
         ViewManager.setViewCallBack(this);
         // 初始化service
-        initService();
-        initSlam();
-        initVision();
+//        initService();
+//        initSlam();
+//        initVision();
 
     }
 
@@ -66,8 +67,8 @@ public class MainActivity extends Activity implements ViewCallBack {
             public void onClick(View v) {
 //                VoiceHandler.listen();
 
-//                Intent intent = new Intent(MainActivity.this, OtherActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, VisionActivity.class);
+                startActivity(intent);
 
 //                FollowBody.getInstance().follow();
             }

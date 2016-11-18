@@ -8,6 +8,7 @@ import com.alibaba.sdk.android.push.CloudPushService;
 import com.alibaba.sdk.android.push.MessageReceiver;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.alibaba.sdk.android.push.notification.CPushMessage;
+import com.robot.et.business.control.PushResult;
 
 import java.util.Map;
 
@@ -52,6 +53,7 @@ public class ALiMsgReceiver extends MessageReceiver {
             String result = cPushMessage.getContent();
             Log.i(TAG, "收到一条推送消息cPushMessage.getContent()===" + result);
             if (!TextUtils.isEmpty(result)) {
+                PushResult.result(context, result);
             }
 
         } catch (Exception e) {

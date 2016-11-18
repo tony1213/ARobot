@@ -10,10 +10,12 @@ import com.robot.et.R;
 import com.robot.et.app.CustomApplication;
 import com.robot.et.business.control.MatchScene;
 import com.robot.et.business.control.MoveOrder;
+import com.robot.et.business.media.Music;
 import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.voice.callback.ListenResultCallBack;
 import com.robot.et.business.voice.callback.SpeakEndCallBack;
 import com.robot.et.business.voice.callback.VolumeCallBack;
+import com.robot.et.core.software.music.config.MusicConfig;
 import com.robot.et.core.software.voice.IVoice;
 import com.robot.et.core.software.voice.VoiceFactory;
 import com.robot.et.core.software.voice.callback.ListenCallBack;
@@ -156,7 +158,11 @@ public class VoiceHandler {
     private static SpeakEndCallBack speakEndCallBack = new SpeakEndCallBack() {
         @Override
         public void onSpeakEnd() {
-            listen();
+            switch (type) {
+                case TYPE_LISTEN:
+                    listen();
+                    break;
+            }
         }
     };
 
@@ -198,9 +204,17 @@ public class VoiceHandler {
                 case VIEW_IMG:// 显示表情
                     ViewManager.getViewCallBack().onShowEmotion(false, R.mipmap.emotion_normal);
                     break;
+                case TYPE_MUSIC:
+                    Music.playMusic(context, MusicConfig.PLAY_MUSIC, musicName, Music.MUSIC_FROM_NETWORK);
+                    break;
             }
         }
     };
+
+    private static String musicName;
+    private static int type;
+    private static final int TYPE_MUSIC = 2;
+    private static final int TYPE_LISTEN = 0;
 
     /**
      * 文本理解结果
@@ -212,6 +226,7 @@ public class VoiceHandler {
             public void onUnderstandResult(SceneServiceEnum serviceEnum, String understandResult) {
                 Log.i(TAG, "serviceEnum==" + serviceEnum);
                 Log.i(TAG, "ifly understandResult==" + understandResult);
+                type = TYPE_LISTEN;
                 if (!TextUtils.isEmpty(understandResult)) {
                     if (serviceEnum != null) {
                         switch (serviceEnum) {
@@ -219,7 +234,11 @@ public class VoiceHandler {
                                 // 歌手 + 歌名 + 歌曲src（中间以&连接）
                                 if (understandResult.contains("&")) {
                                     String[] musics = understandResult.split("&");
-                                    understandResult = musics[0] + musics[1];
+//                                    type = TYPE_MUSIC;
+//                                    musicName = musics[2];
+//                                    VoiceHandler.speak("好的，开始播放" + musics[0] + ":" + musics[1], speakEndCallBack);
+//                                    handler.sendEmptyMessage(type);
+//                                    return;
                                 }
 
                                 break;

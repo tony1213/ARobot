@@ -20,4 +20,6 @@ public class GlobalConfig {
     public static boolean isConnectVision = false;
     // 是否是视觉学习
     public static boolean isVisionLearn = false;
+    // 是否在播放音乐
+    public static boolean isPlayMusic = false;
 }

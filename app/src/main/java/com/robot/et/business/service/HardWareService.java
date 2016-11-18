@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.robot.et.R;
 import com.robot.et.business.control.FollowBody;
+import com.robot.et.business.media.Music;
 import com.robot.et.business.vision.Vision;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.config.GlobalConfig;
@@ -99,8 +100,9 @@ public class HardWareService extends Service implements IWakeUp {
             GlobalConfig.isVisionLearn = false;
             Vision.getInstance().closeLearn();
         }
-        if (GlobalConfig.isConnectSlam) {
-//            SlamtecLoader.getInstance().execBasicMove(MoveEnum.STOP.getMoveKey());
+        if (GlobalConfig.isPlayMusic) {
+            GlobalConfig.isPlayMusic = false;
+            Music.stopMusic();
         }
     }
 

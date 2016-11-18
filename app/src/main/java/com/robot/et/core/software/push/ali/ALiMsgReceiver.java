@@ -5,10 +5,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.alibaba.sdk.android.push.CloudPushService;
+import com.alibaba.sdk.android.push.CommonCallback;
 import com.alibaba.sdk.android.push.MessageReceiver;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.alibaba.sdk.android.push.notification.CPushMessage;
-import com.robot.et.business.control.PushResult;
+import com.robot.et.core.software.push.IPush;
 
 import java.util.Map;
 
@@ -18,7 +19,32 @@ import java.util.Map;
  */
 public class ALiMsgReceiver extends MessageReceiver {
 
-    public static final String TAG = "alipush";
+    private static final String TAG = "alipush";
+    private static IPush mCallBack;
+
+    /**
+     * 设置阿里推送的alias值
+     *
+     * @return
+     */
+    public static void setAlias(String content) {
+        Log.i(TAG, "content===" + content);
+        PushServiceFactory.getCloudPushService().addAlias(content, new CommonCallback() {
+            @Override
+            public void onSuccess(String response) {
+                Log.i(TAG, "添加别名成功");
+            }
+
+            @Override
+            public void onFailed(String errorCode, String errorMessage) {
+                Log.i(TAG, "添加别名失败，errorCode: " + errorCode + ", errorMessage：" + errorMessage);
+            }
+        });
+    }
+
+    public static void setCallBack(IPush iPush) {
+        mCallBack = iPush;
+    }
 
     /**
      * 推送通知的回调方法
@@ -53,7 +79,9 @@ public class ALiMsgReceiver extends MessageReceiver {
             String result = cPushMessage.getContent();
             Log.i(TAG, "收到一条推送消息cPushMessage.getContent()===" + result);
             if (!TextUtils.isEmpty(result)) {
-                PushResult.result(context, result);
+                if (mCallBack != null) {
+                    mCallBack.onPushResult(result);
+                }
             }
 
         } catch (Exception e) {

@@ -207,19 +207,7 @@ public class MatchScene {
 
                 break;
             case GO_WHERE_SCENE:// 去哪里的指令
-                if (!GlobalConfig.isConnectSlam) {
-                    VoiceHandler.speakEndToListen("未连接底盘");
-                    return true;
-                }
-                String areaName = MatchStringUtil.getGoWhereAnswer(result);
-                Log.i(TAG, "areaName===" + areaName);
-                if (!TextUtils.isEmpty(areaName)) {
-                    if (areaName.length() < 8) {
-                        flag = true;
-                        VoiceHandler.speakEndToListen("好的");
-                        goToLocation(areaName);
-                    }
-                }
+                flag = geToWhere(result);
 
                 break;
             case OPEN_MOTION_SCENE:// 打开运动
@@ -249,6 +237,24 @@ public class MatchScene {
                 break;
         }
         return flag;
+    }
+
+
+    public static boolean geToWhere(String result) {
+        if (!GlobalConfig.isConnectSlam) {
+            VoiceHandler.speakEndToListen("未连接底盘");
+            return true;
+        }
+        String areaName = MatchStringUtil.getGoWhereAnswer(result);
+        Log.i(TAG, "areaName===" + areaName);
+        if (!TextUtils.isEmpty(areaName)) {
+            if (areaName.length() < 8) {
+                VoiceHandler.speakEndToListen("好的");
+                goToLocation(areaName);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -345,6 +351,7 @@ public class MatchScene {
      */
     private static void follow() {
         VoiceHandler.speakEndToListen("好的");
+//        VoiceHandler.speak("好的", null);
         FollowBody.getInstance().follow();
     }
 

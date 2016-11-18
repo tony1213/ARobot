@@ -78,12 +78,15 @@ public class OtherActivity extends BaseActivity implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.btn_system_music:
                 playSystem();
+//                Music.playMusic(OtherActivity.this, MusicConfig.PLAY_MUSIC, "http://file.kuyinyun.com/group1/M00/38/CB/rBBGdVPT8n-AQ-hzABeFmCKyIMo468.mp3",1);
                 break;
             case R.id.btn_xima_music:
                 playXima(MusicConfig.PLAY_MUSIC, "青花瓷");
+//                Music.playByXiMaLaYa(OtherActivity.this, MusicConfig.PLAY_MUSIC, "青花瓷");
                 break;
             case R.id.btn_ximalaya_radio:
                 playXima(MusicConfig.PLAY_RADIO, "江西音乐广播");
+//                Music.playByXiMaLaYa(OtherActivity.this, MusicConfig.PLAY_RADIO, "江西音乐广播");
                 break;
             case R.id.btn_play_video:
                 String fileSrc = Environment.getExternalStorageDirectory() + File.separator + "robot" + File.separator + "视频"

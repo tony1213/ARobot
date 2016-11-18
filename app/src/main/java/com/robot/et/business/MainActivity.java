@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.robot.et.R;
+import com.robot.et.business.control.Push;
 import com.robot.et.business.service.HardWareService;
 import com.robot.et.business.view.ViewManager;
 import com.robot.et.business.view.callback.ViewCallBack;
@@ -19,7 +20,6 @@ import com.robot.et.business.vision.Vision;
 import com.robot.et.business.vision.callback.VisionInitCallBack;
 import com.robot.et.business.voice.VoiceHandler;
 import com.robot.et.config.GlobalConfig;
-import com.robot.et.core.software.push.ali.ALiPush;
 import com.robot.et.core.software.slam.SlamtecLoader;
 import com.robot.et.core.software.widget.CustomTextView;
 import com.slamtec.slamware.SlamwareCorePlatform;
@@ -30,6 +30,7 @@ public class MainActivity extends Activity implements ViewCallBack {
     private LinearLayout showTextL, showEmotionL, showImgL;
     private ImageView imgEmotion, imageBitmap, imagePhoto;
     private CustomTextView tvText;
+    private boolean isFirst = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +65,22 @@ public class MainActivity extends Activity implements ViewCallBack {
             @Override
             public void onClick(View v) {
 //                VoiceHandler.listen();
-                // 初始化阿里推送
-                new ALiPush(MainActivity.this, "80000057");
+
+//                Intent intent = new Intent(MainActivity.this, OtherActivity.class);
+//                startActivity(intent);
+
+//                FollowBody.getInstance().follow();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isFirst) {
+            isFirst = true;
+            new Push(this, "80000057");
+        }
     }
 
     /**
@@ -79,6 +92,8 @@ public class MainActivity extends Activity implements ViewCallBack {
         if (slamwareCorePlatform != null) {
             GlobalConfig.isConnectSlam = true;
             Log.i(TAG, "slam初始化成功");
+            int battery = slamwareCorePlatform.getBatteryPercentage();
+            Log.i(TAG, "battery==" + battery);
         }
     }
 

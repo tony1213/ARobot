@@ -76,8 +76,8 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
     @Override
     protected void onResume() {
         super.onResume();
-        PendingIntent permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
-                this.mActionUsbPermission), 0);
+//        PendingIntent permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(
+//                this.mActionUsbPermission), 0);
 
 //        List<DeviceInfo> devices = enumerateDevices();
 //        if (devices.isEmpty()) {
@@ -90,17 +90,17 @@ public class VisionActivity extends Activity implements View.OnClickListener,Vis
 //
 //        UsbDevice usbDevice = getUsbDevice(uri);
 
-        DeviceInfo info = new DeviceInfo("04b4/1003@3/19", "", "/dev/bus/usb/003/004", 7463, 1537);
-
-        UsbDevice usbDevice = getUsbDevice(info);
-
-        if (usbDevice != null) {
-            Log.i(TAG, "usbDevice != null");
+//        DeviceInfo info = new DeviceInfo("1d27/0601@3/5", "", "/dev/bus/usb/003/005", 7463, 1537);
+//
+//        UsbDevice usbDevice = getUsbDevice(info);
+//
+//        if (usbDevice != null) {
+//            Log.i(TAG, "usbDevice != null");
 //            UsbManager manager = (UsbManager)this.getSystemService("usb");
 //            manager.requestPermission(usbDevice, permissionIntent);
-        } else {
-            Log.i(TAG, "usbDevice == null");
-        }
+//        } else {
+//            Log.i(TAG, "usbDevice == null");
+//        }
     }
 
     public UsbDevice getUsbDevice(String uri)

@@ -6,4 +6,10 @@ package com.robot.et.config;
 
 public class DataConfig {
 
+    public static String phoneNum;
+
+    public static void setPhone(String phone) {
+        phoneNum = phone;
+    }
+
 }

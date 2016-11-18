@@ -13,7 +13,6 @@ import java.util.List;
 
 /**
  * Created by Tony on 2016/11/11.
- *
  */
 
 public class SlamtecLoader {
@@ -35,39 +34,42 @@ public class SlamtecLoader {
     private static final int MOVEDIRECTION_TURN_LEFT = 3;
     private static final int MOVEDIRECTION_TURN_RIGHT = 4;
     private static final int MOVEDIRECTION_CANCEL = 5;
+    private Location location;
+    private Rotation rotation;
 
     public SlamwareCorePlatform slamwareCorePlatform;
 
     private static SlamtecLoader slamtecLoader = null;
 
-    private SlamtecLoader(){
-
+    private SlamtecLoader() {
+        location = new Location();
+        rotation = new Rotation();
     }
 
-    public static synchronized SlamtecLoader getInstance(){
-        if (null == slamtecLoader){
+    public static synchronized SlamtecLoader getInstance() {
+        if (null == slamtecLoader) {
             slamtecLoader = new SlamtecLoader();
         }
         return slamtecLoader;
     }
 
     //slamtec连接
-    public SlamwareCorePlatform execConnect(){
-        Log.e(TAG,"execConnect");
+    public SlamwareCorePlatform execConnect() {
+        Log.e(TAG, "execConnect");
         try {
-            slamwareCorePlatform = SlamwareCorePlatform.connect(ROBOT_IP,PORT);
-        }catch (Exception e){
-            Log.e("slamtec","Connect fail,错误级别高");
+            slamwareCorePlatform = SlamwareCorePlatform.connect(ROBOT_IP, PORT);
+        } catch (Exception e) {
+            Log.e("slamtec", "Connect fail,错误级别高");
             e.printStackTrace();
         }
         return slamwareCorePlatform;
     }
 
     //slamtec 运动控制
-    public void execBasicMove(int direction){
-        Log.e(TAG,"execBasicMove:"+direction);
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
-        switch (direction){
+    public void execBasicMove(int direction) {
+        Log.e(TAG, "execBasicMove:" + direction);
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
+        switch (direction) {
             case MOVEDIRECTION_FORWARD:
                 slamwareCorePlatform.moveBy(MoveDirection.FORWARD);
                 break;
@@ -81,64 +83,70 @@ public class SlamtecLoader {
                 slamwareCorePlatform.moveBy(MoveDirection.TURN_RIGHT);
                 break;
             case MOVEDIRECTION_CANCEL:
-                slamwareCorePlatform.getCurrentAction().cancel();
+//                slamwareCorePlatform.getCurrentAction().cancel();
                 break;
         }
     }
 
     //slamtec 控制唤醒角度转向，这个方法只适用于硬件唤醒
-    public void execBasicRotate(int degree){
-        Log.e(TAG,"execBasicRotate:唤醒角度===="+degree);
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
-        Preconditions.checkArgument(degree >= 0 && degree <=360,ERROR_MESSAGE_WAKEUP);
-        if (degree < 180){
-            slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) -degree),0,0));
-        }else {
-            slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) 360-degree),0,0));
+    public void execBasicRotate(int degree) {
+        Log.e(TAG, "execBasicRotate:唤醒角度====" + degree);
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
+        Preconditions.checkArgument(degree >= 0 && degree <= 360, ERROR_MESSAGE_WAKEUP);
+        if (degree < 180) {
+            slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) -degree), 0, 0));
+        } else {
+            slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) 360 - degree), 0, 0));
         }
     }
 
     //slamtec 控制旋转方向和旋转角度
     //direction:3是向左，4是向右。
-    public void execBasicRotate(int degree,int direction,int circle){
-        Log.e(TAG,"execBasicRotate");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
-        Preconditions.checkNotNull(direction,ERROR_MESSAGE_DIRECTION);
-        Preconditions.checkNotNull(circle,ERROR_MESSAGE_CIRCLE);
-        Preconditions.checkArgument(degree >= 0 && degree <=360,ERROR_MESSAGE_WAKEUP);
-        switch (direction){
+    public void execBasicRotate(int degree, int direction, int circle) {
+        Log.e(TAG, "execBasicRotate degree==" + degree + "---direction==" + direction);
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
+        Preconditions.checkNotNull(direction, ERROR_MESSAGE_DIRECTION);
+        Preconditions.checkNotNull(circle, ERROR_MESSAGE_CIRCLE);
+        Preconditions.checkArgument(degree >= 0 && degree <= 360, ERROR_MESSAGE_WAKEUP);
+        switch (direction) {
             case MOVEDIRECTION_TURN_LEFT:
-                slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) degree+circle*360),0,0));
+                slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) degree + circle * 360), 0, 0));
                 break;
             case MOVEDIRECTION_TURN_RIGHT:
-                slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) -degree+circle*360),0,0));
+                slamwareCorePlatform.rotate(new Rotation((float) Math.toRadians((double) -degree + circle * 360), 0, 0));
                 break;
         }
     }
 
     //slamtec获取当前机器人的坐标
-    public Location getCurrentRobotPose(){
-        Log.e(TAG,"getCurrentRobotPose");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
+    public Location getCurrentRobotPose() {
+        Log.e(TAG, "getCurrentRobotPose");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
         Pose robotPose = slamwareCorePlatform.getPose();
-        Location location = new Location();
         location.setX(robotPose.getX());
         location.setY(robotPose.getY());
         location.setZ(robotPose.getZ());
         return location;
     }
 
+    public Rotation getCurrentRotation() {
+        Log.e(TAG, "getCurrentRobotPose");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
+        Pose robotPose = slamwareCorePlatform.getPose();
+        rotation.setYaw(robotPose.getYaw());
+        return rotation;
+    }
+
     //slamtec设置导航目标  <策略一>
-    public void execSetGoal(Pose pose){
-        Log.e(TAG,"execSetGoal(Pose pose)");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
+    public void execSetGoal(Pose pose) {
+        Log.e(TAG, "execSetGoal(Pose pose)");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
         execSetGoal(pose.getLocation());
     }
 
     //slamtec设置导航目标 <策略二>
-    public void execSetGoal(float robotX , float robotY){
-        Log.e(TAG,"execSetGoal(float robotX , float robotY)");
-        Location location = new Location();
+    public void execSetGoal(float robotX, float robotY) {
+        Log.e(TAG, "execSetGoal(float robotX , float robotY)");
         location.setX(robotX);
         location.setY(robotY);
         location.setZ(0.0f);
@@ -146,30 +154,30 @@ public class SlamtecLoader {
     }
 
     //slamtec设置导航目标 <策略三>
-    public void execSetGoal(Location location){
-        Log.e(TAG,"execSetGoal(Location location)");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
+    public void execSetGoal(Location location) {
+        Log.e(TAG, "execSetGoal(Location location)");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
         slamwareCorePlatform.moveTo(location);
     }
 
     //slamtec设置巡逻模式 <策略一>
-    public void execPatrol(List<Location> list){
-        Log.e(TAG,"execPatrol(List<Location> list)");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
+    public void execPatrol(List<Location> list) {
+        Log.e(TAG, "execPatrol(List<Location> list)");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
         slamwareCorePlatform.moveTo(list);
     }
 
     //slamtec设置巡逻模式 <策略二>
-    public void execPatrol(List<Location> list,boolean appending){
-        Log.e(TAG,"execPatrol(List<Location> list,boolean appending)");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
-        slamwareCorePlatform.moveTo(list,appending);
+    public void execPatrol(List<Location> list, boolean appending) {
+        Log.e(TAG, "execPatrol(List<Location> list,boolean appending)");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
+        slamwareCorePlatform.moveTo(list, appending);
     }
 
     //slamtec设置巡逻模式 <策略三>
-    public void execPatrol(List<Location> list,boolean appending,boolean isMilestone){
-        Log.e(TAG,"execPatrol(List<Location> list,boolean appending,boolean isMilestone)");
-        Preconditions.checkNotNull(slamwareCorePlatform,ERROR_MESSAGE_CONNECT);
-        slamwareCorePlatform.moveTo(list,appending,isMilestone);
+    public void execPatrol(List<Location> list, boolean appending, boolean isMilestone) {
+        Log.e(TAG, "execPatrol(List<Location> list,boolean appending,boolean isMilestone)");
+        Preconditions.checkNotNull(slamwareCorePlatform, ERROR_MESSAGE_CONNECT);
+        slamwareCorePlatform.moveTo(list, appending, isMilestone);
     }
 }
